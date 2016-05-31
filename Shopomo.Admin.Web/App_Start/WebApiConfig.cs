@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace Shopomo.Web
+namespace Shopomo.Admin.Web
 {
     public static class WebApiConfig
     {
@@ -16,7 +16,7 @@ namespace Shopomo.Web
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/v1.0/{controller}/{id}",
+                routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }

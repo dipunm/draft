@@ -9,12 +9,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2182683B-25B2-47DB-9FDE-2F45247621BF}</ProjectGuid>
+    <ProjectGuid>{61AD31DB-DD9C-41E3-8979-F639BE86E4EC}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Shopomo.Web</RootNamespace>
-    <AssemblyName>Shopomo.Web</AssemblyName>
+    <RootNamespace>Shopomo.Admin.Web</RootNamespace>
+    <AssemblyName>Shopomo.Admin.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -108,18 +108,6 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\Api\__IProductQueryBuilder.cs" />
-    <Compile Include="Models\SearchResults.cs" />
-    <Compile Include="Models\UriSearchModel.cs" />
-    <Compile Include="Models\ApiSearchModel.cs" />
-    <Compile Include="Controllers\Api\AutocompleteController.cs" />
-    <Compile Include="Controllers\Api\FilterController.cs" />
-    <Compile Include="Controllers\Api\ProductSearchController.cs" />
-    <Compile Include="Controllers\CmsPageController.cs" />
-    <Compile Include="Controllers\ComponentController.cs" />
-    <Compile Include="Controllers\LandingPageController.cs" />
-    <Compile Include="Controllers\SearchListingController.cs" />
-    <Compile Include="Controllers\MarketingPageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -128,8 +116,6 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <Content Include="Views\CmsPage\mobile.cshtml" />
-    <Content Include="Views\CmsPage\desktop.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -139,13 +125,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Binders\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Shopomo.ContentProvider\Shopomo.ContentProvider.csproj">
-      <Project>{F6CC6D34-B2A9-4461-8DAF-C87CDC447E4E}</Project>
-      <Name>Shopomo.ContentProvider</Name>
-    </ProjectReference>
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -160,9 +141,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>62752</DevelopmentServerPort>
+          <DevelopmentServerPort>57214</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:62752/</IISUrl>
+          <IISUrl>http://localhost:57214/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
