@@ -17,7 +17,7 @@ namespace Shopomo.Web.Controllers.Api
             _productSearcher = productSearcher;
         }
 
-        public async Task<IHttpActionResult> FullSearch(ApiSearchModel userSearch)
+        public async Task<IHttpActionResult> FullSearch(PagedSearchModel userSearch)
         {
             var query = _productQueryBuilder.Build(userSearch)
                 .WithDepartments()
@@ -26,7 +26,7 @@ namespace Shopomo.Web.Controllers.Api
 
             var results = await _productSearcher.SearchAsync(query);
 
-            var viewModel = new PagedSearchResults(results);
+            var viewModel = new PagedSearchResults(results, userSearch);
             return Ok(viewModel);
         }
 

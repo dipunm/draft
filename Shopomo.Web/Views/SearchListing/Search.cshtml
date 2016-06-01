@@ -1,0 +1,38 @@
+﻿@using Shopomo.Web.ViewExtensions
+@model Shopomo.Web.Models.FirstSearchResult
+
+@{
+    ViewBag.Title = Model.UserQuery.QueryText;
+    ViewBag.Description = "";
+    ViewBag.UserQuery = Model.UserQuery.QueryText;
+    ViewBag.SearchUrl = Request.Url.AbsolutePath;
+}
+<section>
+    @Model.Count results for @Model.UserQuery.QueryText
+    <ul>
+        <li><a href="@Url.FromCurrent(url => url.RemoveQuery("sort"))">Relevance</a></li>
+        <li><a href="@Url.FromCurrent(url => url.AddQuery("sort", "priceasc"))">£-£££</a></li>
+        <li><a href="@Url.FromCurrent(url => url.AddQuery("sort", "pricedesc"))">£££-£</a></li>
+    </ul>
+    @if (!string.IsNullOrWhiteSpace(Model.DidYouMean))
+    {
+        <text>DID YOU MEAN SOMETHING?! @Model.DidYouMean</text>
+    }
+</section>
+
+<aside>
+    Filters
+    <pre>
+    @nameof(Model.Departments)
+    @nameof(Model.UserQuery.MinPrice)
+    @nameof(Model.UserQuery.MaxPrice)
+    @nameof(Model.Retailers) + @nameof(Model.UserQuery.RetailerIds)
+    @nameof(Model.Brands) + @nameof(Model.UserQuery.BrandIds)
+    </pre>
+</aside>
+<section>
+    Products
+    <pre>
+        @nameof(Model.Products)
+</pre>
+</section>

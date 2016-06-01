@@ -102,6 +102,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -109,9 +110,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Api\__IProductQueryBuilder.cs" />
+    <Compile Include="Models\Binders\SearchModelBinder.cs" />
     <Compile Include="Models\SearchResults.cs" />
-    <Compile Include="Models\UriSearchModel.cs" />
-    <Compile Include="Models\ApiSearchModel.cs" />
+    <Compile Include="Models\SearchModel.cs" />
+    <Compile Include="Models\PagedSearchModel.cs" />
     <Compile Include="Controllers\Api\AutocompleteController.cs" />
     <Compile Include="Controllers\Api\FilterController.cs" />
     <Compile Include="Controllers\Api\ProductSearchController.cs" />
@@ -124,12 +126,21 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewExtensions\UrlHelperExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\CmsPage\mobile.cshtml" />
     <Content Include="Views\CmsPage\desktop.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\LandingPage\Home.cshtml" />
+    <Content Include="Views\LandingPage\Department.cshtml" />
+    <Content Include="Views\LandingPage\Brands.cshtml" />
+    <Content Include="Views\SearchListing\Search.cshtml" />
+    <Content Include="Views\Component\Popup.cshtml" />
+    <Content Include="Views\Component\Searchbar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -139,7 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Binders\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shopomo.ContentProvider\Shopomo.ContentProvider.csproj">

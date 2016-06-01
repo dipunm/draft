@@ -4,7 +4,7 @@ using System.Web.Mvc;
 
 namespace Shopomo.Web.Models
 {
-    public class UriSearchModel
+    public class SearchModel
     {
         public string QueryText { get; set; }
         public string DepartmentId { get; set; }

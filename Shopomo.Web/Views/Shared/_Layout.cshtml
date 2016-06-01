@@ -1,0 +1,71 @@
+﻿@using Shopomo.Web.ViewExtensions
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Shopomo&reg;</title>
+    <meta name="title" content="@ViewBag.Title" />
+    <meta name="description" content="@ViewBag.Description" />
+    <!--
+    Canonical Url
+    RootUrlOnly Meta (meta tags that only show on homepage for app integrations)
+    Asset Versioning
+    Configuration: Mixpanel ID, TagManager Visible, TagManager ID, WordpressUrl
+    -->
+</head>
+<body>
+    <nav>
+        <a href="/">HOME LOGO</a>
+        <ul>
+            <li><a href="@Url.Action("Brands", "LandingPage")">Brands</a></li>
+            <li>Features</li>
+            <li><a href="@Url.Action("CmsPage", "CmsPage", new {pageName = "AboutUs"})">AboutUs</a></li>
+        </ul>
+
+<section>
+    This is the search bar
+    <aside>
+        GENERATED FROM DEPARTMENTS FROM SOLR/CACHE!
+        @Html.Action("DepartmentsMenu","Component")
+        <select>
+            <optgroup label="Electronics">
+                <option>Desktops &amp; Laptops</option>
+                <option>Tablets</option>
+                <option>Audio &amp; Hifi</option>
+            </optgroup>
+            <optgroup label="Car & Motorbike">
+                <option>Car Accessories</option>
+                <option>Motorbike Accessories</option>
+                <option>Car Parts</option>
+            </optgroup>
+        </select>
+    </aside>
+    @{
+        var searchUrl = ViewBag.SearchUrl ?? Url.Action("Search", "SearchListing");
+    }
+    <form action="@searchUrl">
+        <input type="search" name="q" value="@ViewBag.UserQuery" />
+        <input type="submit" value="Q" />
+    </form>
+    @if (!string.IsNullOrEmpty(ViewBag.Context))
+    {
+        var noContextUrl = Url.FromCurrent(url =>
+        {
+            url.Path = Url.Action("Search", "SearchListing") ?? "";
+            url.Query = Request.QueryString.ToString();
+        });
+
+        <a href="@noContextUrl">&#10008; @ViewBag.Context</a>
+    }
+</section>
+    <main>
+        @RenderBody()
+    </main>
+
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Shopomo + hardcoded content + hardcoded links</p>
+    </footer>
+</body>
+</html>

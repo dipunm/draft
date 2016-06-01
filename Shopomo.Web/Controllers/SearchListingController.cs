@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Shopomo.Web.Controllers.Api;
 using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers
 {
+    [RoutePrefix("search")]
     public class SearchListingController : Controller
     {
         private readonly IProductQueryBuilder _productQueryBuilder;
@@ -17,29 +18,48 @@ namespace Shopomo.Web.Controllers
             _productSearcher = productSearcher;
         }
 
-        public async Task<ActionResult> Search([FromUri]UriSearchModel search)
+        public SearchListingController()
         {
-            var query = _productQueryBuilder.Build(search)
-                .WithDepartments()
-                .WithFilters("brands")
-                .WithFilters("retailers")
-                .WithSpellingSuggestion();
-
-            var results = await _productSearcher.SearchAsync(query);
-            var viewModel = new FirstSearchResult(results);
-
-            return View(viewModel);
+            
         }
 
-        public Task<ActionResult> SearchByDepartment(string departmentId, [FromUri] UriSearchModel search)
+        [Route("")]
+        public async Task<ActionResult> Search(SearchModel search)
         {
-            search.DepartmentId = departmentId;
+            ProductSearchResults results;
+            try
+            {
+                var query = _productQueryBuilder.Build(search)
+                    .WithDepartments()
+                    .WithFilters("brands")
+                    .WithFilters("retailers")
+                    .WithSpellingSuggestion();
+
+                results = await _productSearcher.SearchAsync(query);
+            }
+            catch (Exception e)
+            {
+                results = null;
+            }
+            var viewModel = new FirstSearchResult(results, search);
+            if (search.QueryText.Contains("z"))
+                viewModel.DidYouMean = "money money money";
+            return View("Search", viewModel);
+        }
+
+        [Route("d/{id}/{slug}")]
+        public Task<ActionResult> SearchByDepartment(string id, SearchModel search)
+        {
+            ViewData["Context"] = "Department" + id;
+            search.DepartmentId = id;
             return Search(search);
         }
 
-        public Task<ActionResult> SearchByBrand(string brandId, [FromUri] UriSearchModel search)
+        [Route("b/{id}/{slug}")]
+        public Task<ActionResult> SearchByBrand(string id, SearchModel search)
         {
-            search.BrandIds = new[] {brandId};
+            ViewData["Context"] = "Brand" + id;
+            search.BrandIds = new[] { id };
             return Search(search);
         }
     }

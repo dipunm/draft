@@ -8,9 +8,10 @@ namespace Shopomo.Web.Models
 {
     public class FirstSearchResult : SearchResults
     {
-        public FirstSearchResult(ProductSearchResults results) : base(results)
+        public FirstSearchResult(ProductSearchResults results, SearchModel userQuery) 
+            : base(results, userQuery)
         {
-            DidYouMean = results.GetSpellingSuggestion();
+            //DidYouMean = results.GetSpellingSuggestion();
         }
 
         public string DidYouMean { get; set; }
@@ -18,42 +19,40 @@ namespace Shopomo.Web.Models
 
     public class PagedSearchResults : SearchResults
     {
-        public PagedSearchResults(ProductSearchResults results) : base(results)
+        public PagedSearchResults(ProductSearchResults results, SearchModel userQuery) 
+            : base(results, userQuery)
         { }
     }
 
     public abstract class SearchResults
     {
-        protected SearchResults(ProductSearchResults results)
+        protected SearchResults(ProductSearchResults results, SearchModel userQuery)
         {
-            Products = results.GetProducts().SimplifyForListing();
-            Departments = results.GetDepartments();
-            Brands = results.GetFilters("brands");
-            Retailers = results.GetFilters("retailers");
-            Count = results.GetProducts().Count();
-            /*
-            var products = results.GetProducts().SimplifyForListing();
-            var departments = results.GetDepartments();
-            var brands = results.GetFilters("brands");
-            var retailers = results.GetFilters("retailers");
-            //not required for api.
-            //var didYouMean = await search.GetSpellingSuggestion();
-
-            var me = new
+            try
             {
-                //didYouMean,
-                products,
-                filters = new
-                {
-                    departments,
-                    brands,
-                    retailers,
-                    userSearch.MinPrice,
-                    userSearch.MaxPrice
-                },
-                Count = products.Count()
-            };
-            */
+                UserQuery = userQuery;
+                Products = results.GetProducts().SimplifyForListing();
+                Departments = results.GetDepartments();
+                Brands = results.GetFilters("brands");
+                Retailers = results.GetFilters("retailers");
+                Count = results.GetProducts().Count();
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
+
+        public SearchModel UserQuery { get; set; }
+
+        public IEnumerable<object> Products { get; set; }
+
+        public IEnumerable<object> Departments { get; set; }
+
+        public IEnumerable<object> Brands { get; set; }
+
+        public IEnumerable<object> Retailers { get; set; }
+
+        public int Count { get; set; }
     }
 }

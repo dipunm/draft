@@ -7,21 +7,26 @@ using System.Web.Mvc;
 
 namespace Shopomo.Web.Controllers
 {
+    //TODO: Caching
+
     public class LandingPageController : Controller
     {
+        [Route("")]
         public Task<ActionResult> Home()
         {
-            throw new NotImplementedException();
+            return Task.FromResult<ActionResult>(View());
         }
 
-        public Task<ActionResult> Department(string departmentId)
+        [Route("d/{id}/{slug}")]
+        public Task<ActionResult> Department(string id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<ActionResult>(View());
         }
 
-        public Task<ActionResult> Brands()
+        [Route("brands")]
+        public Task<ActionResult> Brands(string id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<ActionResult>(View());
         }
     }
 }

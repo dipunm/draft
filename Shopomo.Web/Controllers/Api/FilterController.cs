@@ -19,7 +19,7 @@ namespace Shopomo.Web.Controllers.Api
             _departmentSearcher = departmentSearcher;
         }
 
-        public async Task<IHttpActionResult> GetFilters(string filterType, ApiSearchModel userSearch)
+        public async Task<IHttpActionResult> GetFilters(string filterType, PagedSearchModel userSearch)
         {
             var query = _productQueryBuilder.Build(userSearch)
                 .WithoutProducts()
@@ -31,7 +31,7 @@ namespace Shopomo.Web.Controllers.Api
             return Ok(filters);
         }
 
-        public async Task<IHttpActionResult> GetRelevantDepartmentsUnder(string departmentId, ApiSearchModel userSearch)
+        public async Task<IHttpActionResult> GetRelevantDepartmentsUnder(string departmentId, PagedSearchModel userSearch)
         {
             userSearch.DepartmentId = departmentId ?? userSearch.DepartmentId;
             var query = _productQueryBuilder.Build(userSearch)
@@ -49,6 +49,19 @@ namespace Shopomo.Web.Controllers.Api
             var departments = await _departmentSearcher.GetAllDepartmentsAsync();
             var nested = departments.Nest();
             return Ok(nested);
+        }
+    }
+
+    public static class DepartmentsCompositionHelper
+    {
+        public static IEnumerable<object> Nest(this IEnumerable<object> departments)
+        {
+            throw new NotImplementedException();
+        } 
+
+        public static IEnumerable<object> SimplifyForListing(this IEnumerable<object> products)
+        {
+            throw new NotImplementedException();
         }
     }
 

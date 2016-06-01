@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -28,5 +29,7 @@ namespace Shopomo.Web.Controllers.Api
 
     public interface ITermSearcher
     {
+        Task<IEnumerable<object>> GetSuggestionsForTermAsync(string term);
+        Task<IEnumerable<object>> GetTopDepartmentsForTermAsync(string term);
     }
 }
