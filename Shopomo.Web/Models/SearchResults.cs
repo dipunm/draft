@@ -2,31 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Shopomo.Searchers;
 using Shopomo.Web.Controllers.Api;
 
 namespace Shopomo.Web.Models
 {
-    public class FirstSearchResult : SearchResults
+    public class SearchResults
     {
-        public FirstSearchResult(ProductSearchResults results, SearchModel userQuery) 
-            : base(results, userQuery)
-        {
-            //DidYouMean = results.GetSpellingSuggestion();
-        }
-
-        public string DidYouMean { get; set; }
-    }
-
-    public class PagedSearchResults : SearchResults
-    {
-        public PagedSearchResults(ProductSearchResults results, SearchModel userQuery) 
-            : base(results, userQuery)
-        { }
-    }
-
-    public abstract class SearchResults
-    {
-        protected SearchResults(ProductSearchResults results, SearchModel userQuery)
+        public SearchResults(ProductSearchResults results, SearchModel userQuery)
         {
             try
             {
@@ -36,12 +19,16 @@ namespace Shopomo.Web.Models
                 Brands = results.GetFilters("brands");
                 Retailers = results.GetFilters("retailers");
                 Count = results.GetProducts().Count();
+                DidYouMean = results.GetSpellingSuggestion();
             }
             catch (Exception e)
             {
                 
             }
         }
+
+   
+        public string DidYouMean { get; set; }
 
         public SearchModel UserQuery { get; set; }
 

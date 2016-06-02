@@ -109,7 +109,6 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\Api\__IProductQueryBuilder.cs" />
     <Compile Include="Models\Binders\SearchModelBinder.cs" />
     <Compile Include="Models\SearchResults.cs" />
     <Compile Include="Models\SearchModel.cs" />
@@ -155,6 +154,10 @@
     <ProjectReference Include="..\Shopomo.ContentProvider\Shopomo.ContentProvider.csproj">
       <Project>{F6CC6D34-B2A9-4461-8DAF-C87CDC447E4E}</Project>
       <Name>Shopomo.ContentProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shopomo.Searchers\Shopomo.Searchers.csproj">
+      <Project>{2D58F6B3-FA94-4A4B-ACA9-99C666949DD6}</Project>
+      <Name>Shopomo.Searchers</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

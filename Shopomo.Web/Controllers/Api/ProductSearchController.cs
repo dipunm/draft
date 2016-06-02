@@ -2,37 +2,37 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Shopomo.Searchers;
+using Shopomo.Searchers.QueryModels;
 using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers.Api
 {
     public class ProductSearchController : ApiController
     {
-        private readonly IProductQueryBuilder _productQueryBuilder;
         private readonly IProductSearcher _productSearcher;
 
-        public ProductSearchController(IProductQueryBuilder productQueryBuilder, IProductSearcher productSearcher)
+        public ProductSearchController(IProductSearcher productSearcher)
         {
-            _productQueryBuilder = productQueryBuilder;
             _productSearcher = productSearcher;
         }
 
         public async Task<IHttpActionResult> FullSearch(PagedSearchModel userSearch)
         {
-            var query = _productQueryBuilder.Build(userSearch)
-                .WithDepartments()
-                .WithFilters("brands")
-                .WithFilters("retailers");
+            var query = ProductSearch.Build(userSearch)
+                .IncludingRelatedDepartments()
+                .IncludingRelatedFilters("brands")
+                .IncludingRelatedFilters("retailers");
 
             var results = await _productSearcher.SearchAsync(query);
 
-            var viewModel = new PagedSearchResults(results, userSearch);
+            var viewModel = new SearchResults(results, userSearch);
             return Ok(viewModel);
         }
 
         public async Task<IHttpActionResult> GetProductDetails(string productId)
         {
-            var query = _productQueryBuilder.BuildSearchFromId(productId);
+            var query = ProductSearch.BuildSearchFromId(productId);
             var results = await _productSearcher.SearchAsync(query);
             var details = results.GetProducts().FirstOrDefault();
 

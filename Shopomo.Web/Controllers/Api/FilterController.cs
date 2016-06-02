@@ -2,41 +2,41 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Shopomo.Searchers;
+using Shopomo.Searchers.QueryModels;
 using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers.Api
 {
     public class FilterController : ApiController
     {
-        private readonly IProductQueryBuilder _productQueryBuilder;
         private readonly IProductSearcher _productSearcher;
         private readonly IDepartmentSearcher _departmentSearcher;
 
-        public FilterController(IProductQueryBuilder productQueryBuilder, IProductSearcher productSearcher, IDepartmentSearcher departmentSearcher)
+        public FilterController(IProductSearcher productSearcher, IDepartmentSearcher departmentSearcher)
         {
-            _productQueryBuilder = productQueryBuilder;
             _productSearcher = productSearcher;
             _departmentSearcher = departmentSearcher;
         }
 
         public async Task<IHttpActionResult> GetFilters(string filterType, PagedSearchModel userSearch)
         {
-            var query = _productQueryBuilder.Build(userSearch)
+            var query = ProductSearch.Build(userSearch)
                 .WithoutProducts()
-                .WithFilters(filterType, 100);
+                .IncludingRelatedFilters(filterType, 100);
 
             var results = await _productSearcher.SearchAsync(query);
 
-            var filters = results.GetRelatedFilters(filterType);
+            var filters = results.GetFilters(filterType);
             return Ok(filters);
         }
 
         public async Task<IHttpActionResult> GetRelevantDepartmentsUnder(string departmentId, PagedSearchModel userSearch)
         {
             userSearch.DepartmentId = departmentId ?? userSearch.DepartmentId;
-            var query = _productQueryBuilder.Build(userSearch)
+            var query = ProductSearch.Build(userSearch)
                 .WithoutProducts()
-                .WithDepartments();
+                .IncludingRelatedDepartments();
 
             var results = await _productSearcher.SearchAsync(query);
 

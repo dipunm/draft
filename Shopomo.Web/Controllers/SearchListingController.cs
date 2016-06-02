@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Shopomo.Web.Controllers.Api;
+using Shopomo.Searchers;
+using Shopomo.Searchers.QueryModels;
 using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers
@@ -9,31 +10,29 @@ namespace Shopomo.Web.Controllers
     [RoutePrefix("search")]
     public class SearchListingController : Controller
     {
-        private readonly IProductQueryBuilder _productQueryBuilder;
         private readonly IProductSearcher _productSearcher;
 
-        public SearchListingController(IProductQueryBuilder productQueryBuilder, IProductSearcher productSearcher)
+        public SearchListingController(IProductSearcher productSearcher)
         {
-            _productQueryBuilder = productQueryBuilder;
             _productSearcher = productSearcher;
         }
 
         public SearchListingController()
         {
-            
+            //empty controller for manual testing.
         }
 
         [Route("")]
-        public async Task<ActionResult> Search(SearchModel search)
+        public async Task<ActionResult> Search(SearchModel model)
         {
             ProductSearchResults results;
             try
             {
-                var query = _productQueryBuilder.Build(search)
-                    .WithDepartments()
-                    .WithFilters("brands")
-                    .WithFilters("retailers")
-                    .WithSpellingSuggestion();
+                var query = ProductSearch.Build(model)
+                    .IncludingRelatedDepartments()
+                    .IncludingRelatedFilters("brands")
+                    .IncludingRelatedFilters("retailers")
+                    .IncludingSpellingSuggestion();
 
                 results = await _productSearcher.SearchAsync(query);
             }
@@ -41,9 +40,11 @@ namespace Shopomo.Web.Controllers
             {
                 results = null;
             }
-            var viewModel = new FirstSearchResult(results, search);
-            if (search.QueryText.Contains("z"))
+            var viewModel = new SearchResults(results, model);
+
+            if (model.QueryText?.Contains("z") ?? false)
                 viewModel.DidYouMean = "money money money";
+
             return View("Search", viewModel);
         }
 
