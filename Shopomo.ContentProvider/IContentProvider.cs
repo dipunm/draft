@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Shopomo.ContentProvider.Models;
 
 namespace Shopomo.ContentProvider
 {
     public interface IContentProvider
     {
-        Task<object> GetPageAsync(string pageName);
+        Task<IContent> GetPageAsync(string pageName);
     }
 }
