@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Moq;
@@ -13,13 +14,24 @@ namespace Shopomo.Web.Tests
     [TestFixture]
     public class CuratedPageControllerLoadsContentFromCmsDynamically
     {
+        private List<string> _knownPages;
+        private CuratedPageController _controller;
+        private Mock<IContentProvider> _contentProvider;
+
+        [SetUp]
+        public void Setup()
+        {
+            _contentProvider = new Mock<IContentProvider>();
+            _knownPages = new List<string>();
+            _controller = new CuratedPageController(_contentProvider.Object, _knownPages);
+        }
+
         [Test]
         public async Task Controller_GivenAnUnknownPageName_ShouldRespondNotFound()
         {
-            var knownPages = new[] {"known1", "known2"};
-            var controller = new CuratedPageController(null, knownPages);
+            _knownPages.Add("known1");
 
-            var result = await controller.Desktop("unknown");
+            var result = await _controller.Desktop("unknown");
 
             result.ShouldBeOfType<HttpNotFoundResult>();
         }
@@ -27,14 +39,12 @@ namespace Shopomo.Web.Tests
         [Test]
         public async Task Controller_GivenKnownPageName_ShouldPresentDataFromContentProvider()
         {
-            var knownPages = new[] { "known1", "known2" };
-            var contentProvider = new Mock<IContentProvider>();
+            _knownPages.Add("known1");
             var mockModel = new Mock<IContent>().Object;
-            contentProvider.Setup(p => p.GetPageAsync("known1"))
+            _contentProvider.Setup(p => p.GetPageAsync("known1"))
                 .ReturnsAsync(mockModel);
-            var controller = new CuratedPageController(contentProvider.Object, knownPages);
 
-            var result = await controller.Desktop("known1");
+            var result = await _controller.Desktop("known1");
 
             result.ShouldBeOfType<ViewResult>();
             (result as ViewResult).Model.ShouldBe(mockModel);
@@ -43,14 +53,12 @@ namespace Shopomo.Web.Tests
         [Test]
         public async Task Controller_WhenLoadingMobilePage_ShouldUseMobilePage()
         {
-            var knownPages = new[] { "known1", "known2" };
-            var contentProvider = new Mock<IContentProvider>();
+            _knownPages.Add("known1");
             var mockModel = new Mock<IContent>().Object;
-            contentProvider.Setup(p => p.GetPageAsync("known1"))
+            _contentProvider.Setup(p => p.GetPageAsync("known1"))
                 .ReturnsAsync(mockModel);
-            var controller = new CuratedPageController(contentProvider.Object, knownPages);
 
-            var result = await controller.Mobile("known1");
+            var result = await _controller.Mobile("known1");
 
             result.ShouldBeOfType<ViewResult>();
             (result as ViewResult).ViewName.ShouldBe("mobile");
@@ -59,12 +67,10 @@ namespace Shopomo.Web.Tests
         [Test]
         public async Task Controller_WhenContentProviderReturnsNoContent_ShouldRespondServerError()
         {
-            var knownPages = new[] { "known1", "known2" };
-            var contentProvider = new Mock<IContentProvider>();
-            contentProvider.SetReturnsDefault(Task.FromResult<IContent>(null));
-            var controller = new CuratedPageController(contentProvider.Object, knownPages);
-
-            var result = await controller.Desktop("known1");
+            _knownPages.Add("known1");
+            _contentProvider.Setup(p => p.GetPageAsync("known1")).ReturnsAsync(null);
+            
+            var result = await _controller.Desktop("known1");
 
             result.ShouldBeOfType<HttpStatusCodeResult>();
             (result as HttpStatusCodeResult).StatusCode.ShouldBe((int)HttpStatusCode.InternalServerError);

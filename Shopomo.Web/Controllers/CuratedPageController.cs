@@ -16,7 +16,7 @@ namespace Shopomo.Web.Controllers
         private readonly IContentProvider _contentProvider;
         private readonly IEnumerable<string> _supportedPages;
 
-        public CuratedPageController(IContentProvider contentProvider, string[] knownPages)
+        public CuratedPageController(IContentProvider contentProvider, IEnumerable<string> knownPages)
         {
             _contentProvider = contentProvider;
             _supportedPages = knownPages;
