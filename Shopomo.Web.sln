@@ -19,6 +19,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopomo.ContentProvider.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopomo.Web.Tests", "Shopomo.Web.Tests\Shopomo.Web.Tests.csproj", "{900042CA-BE9D-492D-9750-555192D27B60}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{E49A2B2D-7A86-4147-A338-B75971167C23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{7FCDDABF-94F2-4FC5-AF6A-B95B79450114}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B4830000-1BE4-47D0-9568-72C773EB62BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +69,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F6CC6D34-B2A9-4461-8DAF-C87CDC447E4E} = {7FCDDABF-94F2-4FC5-AF6A-B95B79450114}
+		{61AD31DB-DD9C-41E3-8979-F639BE86E4EC} = {E49A2B2D-7A86-4147-A338-B75971167C23}
+		{2182683B-25B2-47DB-9FDE-2F45247621BF} = {E49A2B2D-7A86-4147-A338-B75971167C23}
+		{832EB37B-F98C-4862-84CB-8F924B87B3A4} = {7FCDDABF-94F2-4FC5-AF6A-B95B79450114}
+		{900042CA-BE9D-492D-9750-555192D27B60} = {E49A2B2D-7A86-4147-A338-B75971167C23}
 	EndGlobalSection
 EndGlobal
