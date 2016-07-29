@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopomo.Web", "Shopomo.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopomo.ContentProvider.Tests", "Shopomo.ContentProvider.Tests\Shopomo.ContentProvider.Tests.csproj", "{832EB37B-F98C-4862-84CB-8F924B87B3A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopomo.Web.Tests", "Shopomo.Web.Tests\Shopomo.Web.Tests.csproj", "{900042CA-BE9D-492D-9750-555192D27B60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{832EB37B-F98C-4862-84CB-8F924B87B3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{832EB37B-F98C-4862-84CB-8F924B87B3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{832EB37B-F98C-4862-84CB-8F924B87B3A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{900042CA-BE9D-492D-9750-555192D27B60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{900042CA-BE9D-492D-9750-555192D27B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{900042CA-BE9D-492D-9750-555192D27B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{900042CA-BE9D-492D-9750-555192D27B60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

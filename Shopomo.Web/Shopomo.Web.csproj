@@ -116,7 +116,7 @@
     <Compile Include="Controllers\Api\AutocompleteController.cs" />
     <Compile Include="Controllers\Api\FilterController.cs" />
     <Compile Include="Controllers\Api\ProductSearchController.cs" />
-    <Compile Include="Controllers\CmsPageController.cs" />
+    <Compile Include="Controllers\CuratedPageController.cs" />
     <Compile Include="Controllers\ComponentController.cs" />
     <Compile Include="Controllers\LandingPageController.cs" />
     <Compile Include="Controllers\SearchListingController.cs" />
@@ -130,8 +130,8 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <Content Include="Views\CmsPage\mobile.cshtml" />
-    <Content Include="Views\CmsPage\desktop.cshtml" />
+    <Content Include="Views\CuratedPage\mobile.cshtml" />
+    <Content Include="Views\CuratedPage\desktop.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\LandingPage\Home.cshtml" />

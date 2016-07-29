@@ -1,0 +1,8 @@
+﻿@model Shopomo.ContentProvider.Models.IContent
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<h2>@Model.Title</h2>
+@Html.Raw(Model.Content)
