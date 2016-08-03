@@ -1,18 +1,28 @@
 ﻿using System.Collections.Generic;
-using System.Web.ModelBinding;
-using System.Web.Mvc;
 
 namespace Shopomo.Web.Models
 {
     public class SearchModel
     {
-        public string QueryText { get; set; }
-        public string DepartmentId { get; set; }
-        public IEnumerable<string> BrandIds { get; set; }
-        public IEnumerable<string> RetailerIds { get; set; }
-        public string MinPrice { get; set; }
-        public string MaxPrice { get; set; }
-        public Sort SortBy { get; set; }
+        public string Query { get; set; }
+        public SearchFilters Filters { get; set; }
+        public Sort Order { get; set; }
+    }
+
+    public class SearchFilters
+    {
+        public PriceRange PriceRange { get; set; }
+        public string Department { get; set; }
+        public IEnumerable<string> Brands { get; set; }
+        public IEnumerable<string> Retailers { get; set; }
+        public bool? OnSale { get; set; }
+        public bool? WithFreeDelivery { get; set; }
+    }
+
+    public class PriceRange
+    {
+        public decimal? Min { get; set; }
+        public decimal? Max { get; set; }
     }
 
     public enum Sort

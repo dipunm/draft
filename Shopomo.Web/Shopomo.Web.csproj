@@ -48,6 +48,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="ReturnNull.ValueProviders, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReturnNull.ValueProviders.Web.1.0.5\lib\net45\ReturnNull.ValueProviders.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReturnNull.ValueProviders.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ReturnNull.ValueProviders.Web.1.0.5\lib\net45\ReturnNull.ValueProviders.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -109,10 +117,10 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Models\Binders\SearchModelBinder.cs" />
+    <Compile Include="Models\Binders\PageModelBuilder.cs" />
+    <Compile Include="Models\PageModel.cs" />
     <Compile Include="Models\SearchResults.cs" />
     <Compile Include="Models\SearchModel.cs" />
-    <Compile Include="Models\PagedSearchModel.cs" />
     <Compile Include="Controllers\Api\AutocompleteController.cs" />
     <Compile Include="Controllers\Api\FilterController.cs" />
     <Compile Include="Controllers\Api\ProductSearchController.cs" />

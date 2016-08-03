@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Security;
-using System.Web.SessionState;
 using System.Web.Http;
+using ReturnNull.ValueProviders.Web.DataSources;
+using ReturnNull.ValueProviders.Web.ModelBinding;
 using Shopomo.Web.Models;
 using Shopomo.Web.Models.Binders;
 
@@ -19,8 +17,14 @@ namespace Shopomo.Web
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);       
-            ModelBinders.Binders.Add(typeof(SearchModel), new SearchModelBinder());     
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            // Set up Querystring as a ModelBuilder ValueSource.
+            DataSourceConfig.DataSources.Add("querystring", new QuerystringProvider());
+
+            // Set up ModelBuilders for Search
+            ModelBinders.Binders.Add(typeof(SearchModel), new ModelBinder<SearchModelBuilder, SearchModel>(new SearchModelBuilder()));
+            ModelBinders.Binders.Add(typeof(PageModel), new ModelBinder<PageModelBuilder, PageModel>(new PageModelBuilder()));
         }
     }
 }

@@ -9,7 +9,7 @@ using Shopomo.Web.Models;
 namespace Shopomo.Web.Controllers.Api
 {
     public class FilterController : ApiController
-    {
+    {/*
         private readonly IProductSearcher _productSearcher;
         private readonly IDepartmentSearcher _departmentSearcher;
 
@@ -49,7 +49,7 @@ namespace Shopomo.Web.Controllers.Api
             var departments = await _departmentSearcher.GetAllDepartmentsAsync();
             var nested = departments.Nest();
             return Ok(nested);
-        }
+        }*/
     }
 
     public static class DepartmentsCompositionHelper

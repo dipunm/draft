@@ -23,6 +23,17 @@ namespace Shopomo.Web.Controllers
         }
 
         [Route("")]
+        public ActionResult Test(SearchModel model, PageModel page)
+        {
+            return Json(new
+            {
+                Search = model,
+                Page = page
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        /*
+        [Route("")]
         public async Task<ActionResult> Search(SearchModel model)
         {
             ProductSearchResults results;
@@ -62,6 +73,6 @@ namespace Shopomo.Web.Controllers
             ViewData["Context"] = "Brand" + id;
             search.BrandIds = new[] { id };
             return Search(search);
-        }
+        }*/
     }
 }

@@ -15,7 +15,7 @@ namespace Shopomo.Web.Controllers.Api
         public ProductSearchController(IProductSearcher productSearcher)
         {
             _productSearcher = productSearcher;
-        }
+        }/*
 
         public async Task<IHttpActionResult> FullSearch(PagedSearchModel userSearch)
         {
@@ -40,6 +40,6 @@ namespace Shopomo.Web.Controllers.Api
                 return NotFound();
 
             return Ok(details);
-        }
+        }*/
     }
 }
