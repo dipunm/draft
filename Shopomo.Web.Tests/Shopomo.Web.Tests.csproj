@@ -94,7 +94,7 @@
   <ItemGroup>
     <Compile Include="Controllers\CuratedPageControllerLoadsContentFromCmsDynamically.cs" />
     <Compile Include="Controllers\SearchListingControllerTests.cs" />
-    <Compile Include="ModelBinders\PageModelBinderTests.cs" />
+    <Compile Include="ModelBinders\PageModelBuilderShouldBuildCorrectlyFromRequestParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

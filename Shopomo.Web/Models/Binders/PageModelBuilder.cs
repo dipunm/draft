@@ -13,8 +13,8 @@ namespace Shopomo.Web.Models.Binders
             dataProvider = dataProvider.LimitedTo("querystring");
             return new PageModel()
             {
-                Size = Math.Min(Math.Abs(dataProvider.GetValue("pagesize", 9)), MaxPageSize),
-                Start = dataProvider.GetValue("pagestart", 0)
+                Size = Math.Min(Math.Abs(dataProvider.GetValue("pagesize", defaultValue: 9)), MaxPageSize),
+                Start = dataProvider.GetValue("pagestart", defaultValue: 0)
             };
         }
     }

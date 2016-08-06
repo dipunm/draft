@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,24 +10,6 @@ namespace Shopomo.Web.Models
 {
     public class SearchResults
     {
-    //    public SearchResults(ProductSearchResults results)
-    //    {
-    //        try
-    //        {
-    //            Products = results.GetProducts().SimplifyForListing();
-    //            Departments = results.GetDepartments();
-    //            Brands = results.GetFilters("brands");
-    //            Retailers = results.GetFilters("retailers");
-    //            Count = results.GetProducts().Count();
-    //            DidYouMean = results.GetSpellingSuggestion();
-    //        }
-    //        catch (Exception e)
-    //        {
-                
-    //        }
-    //    }
-
-
         public string DidYouMean { get; set; }
 
         public IEnumerable<object> Products { get; set; }
@@ -39,4 +22,16 @@ namespace Shopomo.Web.Models
 
         public int Total { get; set; }
     }
+
+    public class ProductSearchData
+    {
+        public IEnumerable Products { get; }
+        public int Total { get; }
+
+        public IEnumerable QueryModifiers { get; }
+
+            
+            //facets, spelling, suggester
+    }
+    
 }
