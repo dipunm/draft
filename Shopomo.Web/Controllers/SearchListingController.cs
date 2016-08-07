@@ -8,11 +8,11 @@ namespace Shopomo.Web.Controllers
     [RoutePrefix("search")]
     public class SearchListingController : Controller
     {
-        private readonly IProductSearcher _searcher;
+        private readonly IProductSearcher _productSearcher;
 
-        public SearchListingController(IProductSearcher searcher)
+        public SearchListingController(IProductSearcher productSearcher)
         {
-            _searcher = searcher;
+            _productSearcher = productSearcher;
         }
 
 
@@ -26,7 +26,11 @@ namespace Shopomo.Web.Controllers
                 new RelatedRetailers(5),
                 new SpellingSuggestion()
             };
-            var result = await _searcher.SearchAsync(search, support);
+
+            search.Page.Start = 0;
+            search.Page.Size = 10;
+
+            var result = await _productSearcher.SearchAsync(search, support);
 
             return View("Search", model: new SearchResults()
             {

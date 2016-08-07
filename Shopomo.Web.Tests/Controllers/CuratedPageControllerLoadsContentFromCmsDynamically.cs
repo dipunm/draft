@@ -9,7 +9,7 @@ using Shopomo.ContentProvider.Models;
 using Shopomo.Web.Controllers;
 using Shouldly;
 
-namespace Shopomo.Web.Tests
+namespace Shopomo.Web.Tests.Controllers
 {
     [TestFixture]
     public class CuratedPageControllerLoadsContentFromCmsDynamically
@@ -81,7 +81,6 @@ namespace Shopomo.Web.Tests
         {
 
         }
-
-
+        
     }
 }

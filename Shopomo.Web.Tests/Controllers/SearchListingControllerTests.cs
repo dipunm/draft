@@ -39,6 +39,33 @@ namespace Shopomo.Web.Tests.Controllers
         }
 
         [Test]
+        public async Task Search_GivenSearchModelPageStart_ShouldResetPageStartTo0()
+        {
+            var query = new SearchModel()
+            { Page = new PageModel() {Start = 2} };
+
+            await _controller.SearchAsync(query);
+
+            _searcher.Verify(s => s.SearchAsync(It.Is<SearchModel>(q => 
+                q.Page.Start == 0), 
+                It.IsAny<IEnumerable<IHintRequest<object>>>()));
+        }
+
+        [Test]
+        public async Task Search_GivenSearchModelPageSize_ShouldResetPageSizeTo10()
+        {
+            var query = new SearchModel()
+            {Page = new PageModel() {Size = 20} };
+
+            await _controller.SearchAsync(query);
+
+            _searcher.Verify(s => s.SearchAsync(It.Is<SearchModel>(q =>
+                q.Page.Size == 10),
+                It.IsAny<IEnumerable<IHintRequest<object>>>()));
+
+        }
+
+        [Test]
         public async Task Search_ShouldAskFor5RetailerOptions()
         {
             const int Limit = 5;
