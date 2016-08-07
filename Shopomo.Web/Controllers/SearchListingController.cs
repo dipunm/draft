@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using Shopomo.Searchers;
-using Shopomo.Searchers.QueryModels;
+using Shopomo.ProductSearcher;
 using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers
@@ -10,69 +8,57 @@ namespace Shopomo.Web.Controllers
     [RoutePrefix("search")]
     public class SearchListingController : Controller
     {
-        private readonly IProductSearcher _productSearcher;
+        private readonly IProductSearcher _searcher;
 
-        public SearchListingController(IProductSearcher productSearcher)
+        public SearchListingController(IProductSearcher searcher)
         {
-            _productSearcher = productSearcher;
+            _searcher = searcher;
         }
 
-        public SearchListingController()
-        {
-            //empty controller for manual testing.
-        }
 
         [Route("")]
-        public ActionResult Test(SearchModel model, PageModel page)
+        public async Task<ActionResult> SearchAsync(SearchModel search)
         {
-            return Json(new
+            var support = new IHintRequest<object>[]
             {
-                Search = model,
-                Page = page
-            }, JsonRequestBehavior.AllowGet);
+                new RelatedBrands(5),
+                new Departments(10),
+                new RelatedRetailers(5),
+                new SpellingSuggestion()
+            };
+            var result = await _searcher.SearchAsync(search, support);
+
+            return View("Search", model: new SearchResults()
+            {
+                Products = result.Products,
+                BrandFilters = result.Get<RelatedBrands, string[]>(),
+                DepartmentFilters = result.Get<Departments, string[]>(),
+                RetailerFilters = result.Get<RelatedRetailers, string[]>(),
+                DidYouMean = result.Get<SpellingSuggestion, string>(),
+                Total = result.Total
+            });
         }
 
-        /*
-        [Route("")]
-        public async Task<ActionResult> Search(SearchModel model)
+
+        [Route("d/{department}")]
+        public Task<ActionResult> SearchByDepartment(string department, SearchModel search)
         {
-            ProductSearchResults results;
-            try
-            {
-                var query = ProductSearch.Build(model)
-                    .IncludingRelatedDepartments()
-                    .IncludingRelatedFilters("brands")
-                    .IncludingRelatedFilters("retailers")
-                    .IncludingSpellingSuggestion();
+            ViewData["Context"] = "Department" + department;
+            if(string.IsNullOrEmpty(search.Filters.Department))
+                search.Filters.Department = department;
 
-                results = await _productSearcher.SearchAsync(query);
-            }
-            catch (Exception e)
-            {
-                results = null;
-            }
-            var viewModel = new SearchResults(results, model);
-
-            if (model.QueryText?.Contains("z") ?? false)
-                viewModel.DidYouMean = "money money money";
-
-            return View("Search", viewModel);
+            return SearchAsync(search);
         }
 
-        [Route("d/{id}/{slug}")]
-        public Task<ActionResult> SearchByDepartment(string id, SearchModel search)
+        [Route("b/{brand}")]
+        public Task<ActionResult> SearchByBrand(string brand, SearchModel search)
         {
-            ViewData["Context"] = "Department" + id;
-            search.DepartmentId = id;
-            return Search(search);
+            ViewData["Context"] = "Brand" + brand;
+            search.Filters.Brands = new[] { brand };
+            return SearchAsync(search);
         }
 
-        [Route("b/{id}/{slug}")]
-        public Task<ActionResult> SearchByBrand(string id, SearchModel search)
-        {
-            ViewData["Context"] = "Brand" + id;
-            search.BrandIds = new[] { id };
-            return Search(search);
-        }*/
     }
+
+
 }

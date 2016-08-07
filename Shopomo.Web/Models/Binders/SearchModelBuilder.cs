@@ -1,26 +1,14 @@
 using System;
-using System.Linq;
 using ReturnNull.ValueProviders;
 using ReturnNull.ValueProviders.Web.ModelBinding;
+using Shopomo.ProductSearcher;
 
 namespace Shopomo.Web.Models.Binders
 {
-    public class PageModelBuilder : IModelBuilder<PageModel>
-    {
-        private const int MaxPageSize = 100;
-        public PageModel BuildModel(IValueProvider dataProvider)
-        {
-            dataProvider = dataProvider.LimitedTo("querystring");
-            return new PageModel()
-            {
-                Size = Math.Min(Math.Abs(dataProvider.GetValue("pagesize", defaultValue: 9)), MaxPageSize),
-                Start = dataProvider.GetValue("pagestart", defaultValue: 0)
-            };
-        }
-    }
-
     public class SearchModelBuilder : IModelBuilder<SearchModel>
     {
+        private const int MaxPageSize = 100;
+
         public SearchModel BuildModel(IValueProvider dataProvider)
         {
             dataProvider = dataProvider.LimitedTo("querystring");
@@ -40,7 +28,13 @@ namespace Shopomo.Web.Models.Binders
                         Max = dataProvider.GetValue<decimal?>("maxprice"),
                         Min = dataProvider.GetValue<decimal?>("minprice")
                     }
-                }
+                },
+                Page = new PageModel()
+                {
+                    Size = Math.Min(Math.Abs(dataProvider.GetValue("pagesize", defaultValue: 9)), MaxPageSize),
+                    Start = Math.Abs(dataProvider.GetValue("pagestart", defaultValue: 0))
+                },
+                Order = dataProvider.GetValue("sort", Sort.Relevance)
             };
         }
     }

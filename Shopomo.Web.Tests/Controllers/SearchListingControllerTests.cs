@@ -4,108 +4,14 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Moq;
 using NUnit.Framework;
+using Shopomo.ProductSearcher;
+using Shopomo.Web.Controllers;
 using Shopomo.Web.Models;
 using Shouldly;
 
 namespace Shopomo.Web.Tests.Controllers
 {
-
-    public class SearchListingController : Controller
-    {
-        private readonly IProductSearcher _searcher;
-
-        public SearchListingController(IProductSearcher searcher)
-        {
-            _searcher = searcher;
-        }
-
-        public async Task<ActionResult> SearchAsync(SearchModel search)
-        {
-            var support = new ISupportingRequest<object>[]
-            {
-                new BrandOptions(5),
-                new DepartmentOptions(10),
-                new RetailerOptions(5),
-                new SpellingSuggestion()
-            };
-            var result = await _searcher.SearchAsync(search, support);
-
-            return View(model: new SearchResults()
-            {
-                Products = result.Products,
-                BrandFilters = result.Get<BrandOptions, string[]>(),
-                DepartmentFilters = result.Get<DepartmentOptions, string[]>(),
-                RetailerFilters = result.Get<RetailerOptions, string[]>(),
-                DidYouMean = result.Get<SpellingSuggestion, string>()
-            });
-        }
-    }
-
-    public interface IProductSearcher
-    {
-        Task<ISearchResult> SearchAsync(SearchModel query, IEnumerable<ISupportingRequest<object>> supportingRequests);
-    }
-
-    public interface ISearchResult
-    {
-        IEnumerable<ProductSummary> Products { get; }
-
-        TOut Get<TRequest, TOut>() where TRequest : ISupportingRequest<TOut>;
-    }
-
-    public interface ISupportingRequest<out TOut>
-    {
-
-    }
-
-    public abstract class FilterOptions
-    {
-        protected FilterOptions(int limit)
-        {
-            Limit = limit;
-        }
-
-        public int Limit { get; }
-    }
-
-    public class DepartmentOptions : FilterOptions, ISupportingRequest<string[]>
-    {
-        public DepartmentOptions(int limit) : base(limit)
-        {
-        }
-    }
-
-    public class RetailerOptions : FilterOptions, ISupportingRequest<string[]>
-    {
-        public RetailerOptions(int limit) : base(limit)
-        {
-        }
-    }
-
-    public class BrandOptions : FilterOptions, ISupportingRequest<string[]>
-    {
-        public BrandOptions(int limit) : base(limit)
-        {
-        }
-    }
-
-    public class SpellingSuggestion : ISupportingRequest<string>
-    {
-
-    }
-
-    public class ProductSummary
-    {
-        public string Id { get; }
-        public string Name { get; }
-        public decimal Price { get; }
-        public string ImageUrl { get; }
-        public bool OnSale { get; }
-        public bool FreeDelivery { get; }
-        public int Rating { get; }
-        public decimal OldPrice { get; }
-    }
-
+ 
     [TestFixture]
     public class SearchListingControllerTests
     {
@@ -129,7 +35,7 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(query, It.IsAny<IEnumerable<ISupportingRequest<object>>>()));
+            _searcher.Verify(s => s.SearchAsync(query, It.IsAny<IEnumerable<IHintRequest<object>>>()));
         }
 
         [Test]
@@ -140,9 +46,9 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISupportingRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
                 //it is an array (info) where:
-                info.OfType<RetailerOptions>()
+                info.OfType<RelatedRetailers>()
                 .SingleOrDefault(o => o.Limit == Limit) != null)));
         }
 
@@ -154,9 +60,9 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISupportingRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
                 //it is an array (info) where:
-                info.OfType<BrandOptions>()
+                info.OfType<RelatedBrands>()
                 .SingleOrDefault(o => o.Limit == Limit) != null)));
         }
 
@@ -168,9 +74,9 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISupportingRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
                 //it is an array (info) where:
-                info.OfType<DepartmentOptions>()
+                info.OfType<Departments>()
                 .SingleOrDefault(o => o.Limit == Limit) != null)));
         }
 
@@ -181,7 +87,7 @@ namespace Shopomo.Web.Tests.Controllers
 
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISupportingRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
                 //it is an array (info) where:
                 info.OfType<SpellingSuggestion>()
                 .SingleOrDefault() != null)));
@@ -204,7 +110,7 @@ namespace Shopomo.Web.Tests.Controllers
         public async Task Search_GivenBrandOptions_ShouldPresentOptionsInViewModel()
         {
             var brands = new [] { "Nike", "Addidas", "Lacoste" };
-            _searchResults.Setup(r => r.Get<BrandOptions, string[]>())
+            _searchResults.Setup(r => r.Get<RelatedBrands, string[]>())
                 .Returns(brands);
             
             var result = await _controller.SearchAsync(new SearchModel());
@@ -217,7 +123,7 @@ namespace Shopomo.Web.Tests.Controllers
         public async Task Search_GivenRetailerOptions_ShouldPresentOptionsInViewModel()
         {
             var retailers = new[] { "Morrisons", "Tesco", "Asda" };
-            _searchResults.Setup(r => r.Get<RetailerOptions, string[]>())
+            _searchResults.Setup(r => r.Get<RelatedRetailers, string[]>())
                 .Returns(retailers);
 
             var result = await _controller.SearchAsync(new SearchModel());
@@ -230,7 +136,7 @@ namespace Shopomo.Web.Tests.Controllers
         public async Task Search_GivenDepartmentOptions_ShouldPresentOptionsInViewModel()
         {
             var departments = new[] { "Electronics", "Clothing", "Homewear" };
-            _searchResults.Setup(r => r.Get<DepartmentOptions, string[]>())
+            _searchResults.Setup(r => r.Get<Departments, string[]>())
                 .Returns(departments);
 
             var result = await _controller.SearchAsync(new SearchModel());
@@ -251,7 +157,20 @@ namespace Shopomo.Web.Tests.Controllers
 
             model.DidYouMean.ShouldBe(spelling);
         }
-        
+
+        [Test]
+        public async Task Search_GivenATotal_ShouldPresentTotalInViewModel()
+        {
+            var total = 1234;
+            _searchResults.Setup(r => r.Total)
+                .Returns(total);
+
+            var result = await _controller.SearchAsync(new SearchModel());
+            var model = (SearchResults)((ViewResult)result).Model;
+
+            model.Total.ShouldBe(total);
+        }
+
 
         /*
          * Should Query to Searcher

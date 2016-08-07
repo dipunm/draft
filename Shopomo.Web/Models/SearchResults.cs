@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Shopomo.Searchers;
-using Shopomo.Web.Controllers.Api;
 
 namespace Shopomo.Web.Models
 {

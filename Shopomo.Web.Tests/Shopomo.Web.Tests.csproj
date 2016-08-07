@@ -93,14 +93,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CuratedPageControllerLoadsContentFromCmsDynamically.cs" />
+    <Compile Include="Controllers\SearchListingController.cs" />
     <Compile Include="Controllers\SearchListingControllerTests.cs" />
-    <Compile Include="ModelBinders\PageModelBuilderShouldBuildCorrectlyFromRequestParameters.cs" />
+    <Compile Include="ModelBinders\SearchModelBuilderShouldBuildCorrectlyFromRequestParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shopomo.ContentProvider\Shopomo.ContentProvider.csproj">
       <Project>{F6CC6D34-B2A9-4461-8DAF-C87CDC447E4E}</Project>
       <Name>Shopomo.ContentProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shopomo.ProductSearcher\Shopomo.ProductSearcher.csproj">
+      <Project>{66419144-BB8B-477E-8A19-4DDC68347056}</Project>
+      <Name>Shopomo.ProductSearcher</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shopomo.Web\Shopomo.Web.csproj">
       <Project>{2182683B-25B2-47DB-9FDE-2F45247621BF}</Project>

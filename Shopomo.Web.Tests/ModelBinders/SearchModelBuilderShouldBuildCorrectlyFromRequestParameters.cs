@@ -2,17 +2,18 @@
 using Moq;
 using NUnit.Framework;
 using ReturnNull.ValueProviders;
+using Shopomo.ProductSearcher;
 using Shopomo.Web.Models.Binders;
 using Shouldly;
 
 namespace Shopomo.Web.Tests.ModelBinders
 {
     [TestFixture]
-    public class PageModelBuilderShouldBuildCorrectlyFromRequestParameters
+    public class SearchModelBuilderShouldBuildCorrectlyFromRequestParameters
     {
         private Dictionary<string, IValueSource> _datasources;
         private ValueProvider _valueProvider;
-        private PageModelBuilder _builder;
+        private SearchModelBuilder _builder;
         private Mock<IValueSource> _datasource;
 
         [SetUp]
@@ -24,7 +25,7 @@ namespace Shopomo.Web.Tests.ModelBinders
                 { "querystring", _datasource.Object },
             };
             _valueProvider = new ValueProvider(_datasources);
-            _builder = new PageModelBuilder();
+            _builder = new SearchModelBuilder();
         }
 
         [Test]
@@ -49,47 +50,81 @@ namespace Shopomo.Web.Tests.ModelBinders
         }
 
         [Test]
-        public void PageModelBuilder_WhenPageSizeIsGreaterThan100_ShouldLimitPageSizeTo100()
+        public void SearchModelBuilder_WhenSortProvided_ShouldSetModelOrderToProvidedValue()
+        {
+            _datasource.Setup(s => s.GetValues<Sort>("sort"))
+                .Returns(new[] { Sort.PriceAsc });
+
+            var model = _builder.BuildModel(_valueProvider);
+
+            model.Order.ShouldBe(Sort.PriceAsc);
+        }
+
+
+        [Test]
+        public void SearchModelBuilder_WhenSortNotAvailable_ShouldSetSortToRelevanceOrder()
+        {
+            _datasource.Setup(s => s.GetValues<Sort>("sort"))
+                .Returns(new Sort[0]);
+
+            var model = _builder.BuildModel(_valueProvider);
+
+            model.Order.ShouldBe(Sort.Relevance);
+        }
+
+        [Test]
+        public void SearchModelBuilder_WhenPageSizeIsGreaterThan100_ShouldLimitPageSizeTo100()
         {
             _datasource.Setup(s => s.GetValues<int>("pagesize"))
                 .Returns(new[] {101});
 
             var model = _builder.BuildModel(_valueProvider);
 
-            model.Size.ShouldBe(100);
+            model.Page.Size.ShouldBe(100);
         }
 
         [Test]
-        public void PageModelBuilder_ShouldHaveDefaultPageSizeOf9()
+        public void SearchModelBuilder_ShouldHaveDefaultPageSizeOf9()
         {
             _datasource.Setup(s => s.GetValues<int>("pagesize"))
                 .Returns(new int[0]);
 
             var model = _builder.BuildModel(_valueProvider);
 
-            model.Size.ShouldBe(9);
+            model.Page.Size.ShouldBe(9);
         }
 
         [Test]
-        public void PageModelBuilder_ShouldHandleNegativeNumbersMakingThemPositive()
+        public void SearchModelBuilder_ShouldHandleNegativePageStartMakingItPositive()
         {
-            _datasource.Setup(s => s.GetValues<int>("pagesize"))
+            _datasource.Setup(s => s.GetValues<int>("pagestart"))
                 .Returns(new [] {-10});
 
             var model = _builder.BuildModel(_valueProvider);
 
-            model.Size.ShouldBe(10);
+            model.Page.Start.ShouldBe(10);
         }
 
         [Test]
-        public void PageModelBuilder_ShouldGetPagePosition_UsingCorrectKey()
+        public void SearchModelBuilder_ShouldHandleNegativePageSizeMakingItPositive()
+        {
+            _datasource.Setup(s => s.GetValues<int>("pagesize"))
+                .Returns(new[] { -10 });
+
+            var model = _builder.BuildModel(_valueProvider);
+
+            model.Page.Size.ShouldBe(10);
+        }
+
+        [Test]
+        public void SearchModelBuilder_ShouldGetPagePosition_UsingCorrectKey()
         {
             _datasource.Setup(s => s.GetValues<int>("pagestart"))
                 .Returns(new[] { 10 });
 
             var model = _builder.BuildModel(_valueProvider);
 
-            model.Start.ShouldBe(10);
+            model.Page.Start.ShouldBe(10);
         }
     }
 }

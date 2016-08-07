@@ -1,4 +1,4 @@
-﻿namespace Shopomo.Web.Models
+﻿namespace Shopomo.ProductSearcher
 {
     public class PageModel
     {

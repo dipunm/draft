@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Web.Http;
-using Shopomo.Searchers;
-using Shopomo.Searchers.QueryModels;
-using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers.Api
 {

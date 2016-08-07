@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace Shopomo.Web.Models
+namespace Shopomo.ProductSearcher
 {
     public class SearchModel
     {
         public string Query { get; set; }
         public SearchFilters Filters { get; set; }
         public Sort Order { get; set; }
+        public PageModel Page { get; set; }
     }
 
     public class SearchFilters
