@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Shopomo.ProductSearcher
+namespace Shopomo.ProductSearcher.Domain
 {
     public class SearchModel
     {
@@ -13,6 +13,12 @@ namespace Shopomo.ProductSearcher
         public SearchFilters Filters { get; set; }
         public Sort Order { get; set; }
         public PageModel Page { get; set; }
+    }
+
+    public class PageModel
+    {
+        public int Start { get; set; }
+        public int Size { get; set; }
     }
 
     public class SearchFilters

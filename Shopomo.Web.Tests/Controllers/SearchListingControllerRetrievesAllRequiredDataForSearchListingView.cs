@@ -4,26 +4,28 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Moq;
 using NUnit.Framework;
-using Shopomo.ProductSearcher;
+using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.Projections;
+using Shopomo.ProductSearcher.Domain.SearchMetas;
 using Shopomo.Web.Controllers;
 using Shopomo.Web.Models;
 using Shouldly;
 
 namespace Shopomo.Web.Tests.Controllers
 {
- 
+
     [TestFixture]
-    public class SearchListingControllerTests
+    public class SearchListingControllerRetrievesAllRequiredDataForSearchListingView
     {
         private Mock<IProductSearcher> _searcher;
         private SearchListingController _controller;
-        private Mock<ISearchResult> _searchResults;
+        private Mock<ISearchResult<ProductSummary>> _searchResults;
 
         [SetUp]
         public void Setup()
         {
             _searcher = new Mock<IProductSearcher>();
-            _searchResults = new Mock<ISearchResult>();
+            _searchResults = new Mock<ISearchResult<ProductSummary>>();
             _searcher.SetReturnsDefault(Task.FromResult(_searchResults.Object));
             _controller = new SearchListingController(_searcher.Object);
         }
@@ -35,7 +37,7 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(query, It.IsAny<IEnumerable<IHintRequest<object>>>()));
+            _searcher.Verify(s => s.SearchAsync(query, It.IsAny<IEnumerable<ISearchMeta<object>>>()));
         }
 
         [Test]
@@ -48,7 +50,7 @@ namespace Shopomo.Web.Tests.Controllers
 
             _searcher.Verify(s => s.SearchAsync(It.Is<SearchModel>(q => 
                 q.Page.Start == 0), 
-                It.IsAny<IEnumerable<IHintRequest<object>>>()));
+                It.IsAny<IEnumerable<ISearchMeta<object>>>()));
         }
 
         [Test]
@@ -61,7 +63,7 @@ namespace Shopomo.Web.Tests.Controllers
 
             _searcher.Verify(s => s.SearchAsync(It.Is<SearchModel>(q =>
                 q.Page.Size == 10),
-                It.IsAny<IEnumerable<IHintRequest<object>>>()));
+                It.IsAny<IEnumerable<ISearchMeta<object>>>()));
 
         }
 
@@ -73,7 +75,7 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISearchMeta<object>>>(info =>
                 //it is an array (info) where:
                 info.OfType<RelatedRetailers>()
                 .SingleOrDefault(o => o.Limit == Limit) != null)));
@@ -87,7 +89,7 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISearchMeta<object>>>(info =>
                 //it is an array (info) where:
                 info.OfType<RelatedBrands>()
                 .SingleOrDefault(o => o.Limit == Limit) != null)));
@@ -101,7 +103,7 @@ namespace Shopomo.Web.Tests.Controllers
             
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISearchMeta<object>>>(info =>
                 //it is an array (info) where:
                 info.OfType<Departments>()
                 .SingleOrDefault(o => o.Limit == Limit) != null)));
@@ -114,7 +116,7 @@ namespace Shopomo.Web.Tests.Controllers
 
             await _controller.SearchAsync(query);
 
-            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<IHintRequest<object>>>(info =>
+            _searcher.Verify(s => s.SearchAsync(It.IsAny<SearchModel>(), It.Is<IEnumerable<ISearchMeta<object>>>(info =>
                 //it is an array (info) where:
                 info.OfType<SpellingSuggestion>()
                 .SingleOrDefault() != null)));
@@ -128,7 +130,7 @@ namespace Shopomo.Web.Tests.Controllers
                 .Returns(products);
 
             var result = await _controller.SearchAsync(new SearchModel());
-            var model = (SearchResults) ((ViewResult) result).Model;
+            var model = (SearchListingModel) ((ViewResult) result).Model;
 
             model.Products.ShouldBe(products);
         }
@@ -141,11 +143,11 @@ namespace Shopomo.Web.Tests.Controllers
                 .Returns(brands);
             
             var result = await _controller.SearchAsync(new SearchModel());
-            var model = (SearchResults)((ViewResult)result).Model;
+            var model = (SearchListingModel)((ViewResult)result).Model;
 
-            model.BrandFilters.ShouldBe(brands);
+            model.BrandFilters.ShouldBe(brands.Select(AsDisplayableValue));
         }
-        
+
         [Test]
         public async Task Search_GivenRetailerOptions_ShouldPresentOptionsInViewModel()
         {
@@ -154,9 +156,9 @@ namespace Shopomo.Web.Tests.Controllers
                 .Returns(retailers);
 
             var result = await _controller.SearchAsync(new SearchModel());
-            var model = (SearchResults)((ViewResult)result).Model;
+            var model = (SearchListingModel)((ViewResult)result).Model;
 
-            model.RetailerFilters.ShouldBe(retailers);
+            model.RetailerFilters.ShouldBe(retailers.Select(AsDisplayableValue));
         }
 
         [Test]
@@ -167,9 +169,9 @@ namespace Shopomo.Web.Tests.Controllers
                 .Returns(departments);
 
             var result = await _controller.SearchAsync(new SearchModel());
-            var model = (SearchResults)((ViewResult)result).Model;
+            var model = (SearchListingModel)((ViewResult)result).Model;
 
-            model.DepartmentFilters.ShouldBe(departments);
+            model.DepartmentFilters.ShouldBe(departments.Select(AsDisplayableValue));
         }
 
         [Test]
@@ -180,7 +182,7 @@ namespace Shopomo.Web.Tests.Controllers
                 .Returns(spelling);
 
             var result = await _controller.SearchAsync(new SearchModel());
-            var model = (SearchResults)((ViewResult)result).Model;
+            var model = (SearchListingModel)((ViewResult)result).Model;
 
             model.DidYouMean.ShouldBe(spelling);
         }
@@ -193,28 +195,16 @@ namespace Shopomo.Web.Tests.Controllers
                 .Returns(total);
 
             var result = await _controller.SearchAsync(new SearchModel());
-            var model = (SearchResults)((ViewResult)result).Model;
+            var model = (SearchListingModel)((ViewResult)result).Model;
 
             model.Total.ShouldBe(total);
         }
 
 
-        /*
-         * Should Query to Searcher
-         * Should Request Filter Options
-         * Should Map Response to ViewModel for view
-         * 
-         * _productSearcher: searches for products and returns results
-         * _productRepository: gets one or more products using traditional ID based queries
-         * _productQuerySuggester: provides suggestions to users to help improve or complete search queries
-         * 
-         * _departments: 
-         *  - getId: used to create user friendly hyperlinks
-         *  - getPath: used to map from hyperlink to search
-         *  - getAll: used to reduce hit on solr. Used to calculate other caches.
-         */
-
-
+        private DisplayableValue AsDisplayableValue(string val)
+        {
+            return new DisplayableValue(val);
+        }
     }
 
 
