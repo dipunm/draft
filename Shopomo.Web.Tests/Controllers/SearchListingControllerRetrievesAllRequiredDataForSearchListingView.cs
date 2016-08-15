@@ -13,6 +13,67 @@ using Shouldly;
 
 namespace Shopomo.Web.Tests.Controllers
 {
+  /*  [TestFixture]
+    public class SearchListingControllerUnderstandsContextualSearches
+    {
+        [Test]
+        public async Task SearchByBrand_GivenAnUnknownBrand_Returns404()
+        {
+            var searcher= new Mock<IProductSearcher>();
+            var brandFinder = new Mock<IBrandFinder>();
+            var controller = new SearchListingController(searcher.Object, brandFinder.Object);
+
+            brandFinder.Setup(f => f.FindBrand("brand"))
+                .ReturnsAsync(null);
+
+            var result = await controller.SearchByBrand("brand", new SearchModel());
+
+            result.ShouldBeOfType<HttpNotFoundResult>();
+        }
+
+        [Test]
+        public async Task SearchByBrand_GivenAKnownBrand_SetsContextInformationForView()
+        {
+            var searcher = new Mock<IProductSearcher>();
+            var brandFinder = new Mock<IBrandFinder>();
+            var controller = new SearchListingController(searcher.Object, brandFinder.Object);
+
+            brandFinder.Setup(f => f.FindBrand("brand"))
+                .ReturnsAsync(new Brand());
+
+            var result = await controller.SearchByBrand("brand", new SearchModel());
+
+            ((ViewResult)result).ViewData["Context"].ShouldBe("brand");
+        }
+
+        [Test]
+        public async Task SearchByBrand_GivenAKnownBrand_LoadsSearchPage()
+        {
+            var searcher = new Mock<IProductSearcher>();
+            var brandFinder = new Mock<IBrandFinder>();
+            var controller = new SearchListingController(searcher.Object, brandFinder.Object);
+
+            brandFinder.Setup(f => f.FindBrand("brand"))
+                .ReturnsAsync(new Brand());
+
+            var result = await controller.SearchByBrand("brand", new SearchModel());
+
+            ((ViewResult)result).ViewName.ShouldBe("Search");
+        }
+    }
+
+    public interface IBrandFinder
+    {
+        Task<Brand> FindBrand(string brandId);
+    }
+
+    public class Brand
+    {
+        public string BrandId { get; }
+        public string BrandName { get; }
+    }
+    */
+    //TODO: First decide how brands and departments look in solr/qs/viewS
 
     [TestFixture]
     public class SearchListingControllerRetrievesAllRequiredDataForSearchListingView

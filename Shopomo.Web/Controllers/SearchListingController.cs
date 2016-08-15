@@ -38,6 +38,7 @@ namespace Shopomo.Web.Controllers
             return View("Search", new SearchListingModel(result));
         }
 
+/*
         [Route("d/{department}")]
         public Task<ActionResult> SearchByDepartment(string department, SearchModel search)
         {
@@ -55,6 +56,7 @@ namespace Shopomo.Web.Controllers
             search.Filters.Brands = new[] { brand };
             return SearchAsync(search);
         }
+        */
 
     }
 
