@@ -40,10 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="PageModel.cs" />
+    <Compile Include="Domain\IProductSearcher.cs" />
+    <Compile Include="Domain\SearchMetas\Departments.cs" />
+    <Compile Include="Domain\SearchMetas\FilterOptions.cs" />
+    <Compile Include="Domain\Projections\ProductSummary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchModel.cs" />
+    <Compile Include="Domain\SearchMetas\RelatedBrands.cs" />
+    <Compile Include="Domain\SearchMetas\RelatedRetailers.cs" />
+    <Compile Include="Domain\SearchModel.cs" />
+    <Compile Include="Domain\SearchMetas\SpellingSuggestion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

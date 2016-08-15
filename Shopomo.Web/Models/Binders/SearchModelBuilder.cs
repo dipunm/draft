@@ -2,6 +2,7 @@ using System;
 using ReturnNull.ValueProviders;
 using ReturnNull.ValueProviders.Web.ModelBinding;
 using Shopomo.ProductSearcher;
+using Shopomo.ProductSearcher.Domain;
 
 namespace Shopomo.Web.Models.Binders
 {

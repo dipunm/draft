@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using ReturnNull.ValueProviders;
 using Shopomo.ProductSearcher;
+using Shopomo.ProductSearcher.Domain;
 using Shopomo.Web.Models.Binders;
 using Shouldly;
 

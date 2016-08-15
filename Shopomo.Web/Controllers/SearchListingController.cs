@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using Shopomo.ProductSearcher;
+using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.SearchMetas;
 using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers
@@ -15,34 +17,26 @@ namespace Shopomo.Web.Controllers
             _productSearcher = productSearcher;
         }
 
+        private ISearchMeta<object>[] PageInterests { get; } = {
+            new RelatedBrands(5),
+            new Departments(10),
+            new RelatedRetailers(5),
+            new SpellingSuggestion()
+        };
+
+        private void LimitPaginationOnSearch(SearchModel search)
+        {
+            search.Page.Start = 0;
+            search.Page.Size = 10;
+        }
 
         [Route("")]
         public async Task<ActionResult> SearchAsync(SearchModel search)
         {
-            var support = new IHintRequest<object>[]
-            {
-                new RelatedBrands(5),
-                new Departments(10),
-                new RelatedRetailers(5),
-                new SpellingSuggestion()
-            };
-
-            search.Page.Start = 0;
-            search.Page.Size = 10;
-
-            var result = await _productSearcher.SearchAsync(search, support);
-
-            return View("Search", model: new SearchResults()
-            {
-                Products = result.Products,
-                BrandFilters = result.Get<RelatedBrands, string[]>(),
-                DepartmentFilters = result.Get<Departments, string[]>(),
-                RetailerFilters = result.Get<RelatedRetailers, string[]>(),
-                DidYouMean = result.Get<SpellingSuggestion, string>(),
-                Total = result.Total
-            });
+            LimitPaginationOnSearch(search);
+            var result = await _productSearcher.SearchAsync(search, PageInterests);
+            return View("Search", new SearchListingModel(result));
         }
-
 
         [Route("d/{department}")]
         public Task<ActionResult> SearchByDepartment(string department, SearchModel search)
