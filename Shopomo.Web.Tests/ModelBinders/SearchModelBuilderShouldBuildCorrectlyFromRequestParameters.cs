@@ -4,6 +4,7 @@ using NUnit.Framework;
 using ReturnNull.ValueProviders;
 using Shopomo.ProductSearcher;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.Web.Models;
 using Shopomo.Web.Models.Binders;
 using Shouldly;
 
@@ -50,27 +51,58 @@ namespace Shopomo.Web.Tests.ModelBinders
             datasource2.Verify(p => p.GetValues<bool?>(It.IsAny<string>()), Times.Never);
         }
 
-        [Test]
-        public void SearchModelBuilder_WhenSortProvided_ShouldSetModelOrderToProvidedValue()
+        [TestCase("priceasc", Sort.PriceAsc)]
+        [TestCase("pricedesc", Sort.PriceDesc)]
+        public void SearchModelBuilder_WhenSortProvided_ShouldSetModelOrderToProvidedValue(string sourceValue, Sort destValue)
         {
-            _datasource.Setup(s => s.GetValues<Sort>("sort"))
-                .Returns(new[] { Sort.PriceAsc });
+            _datasource.Setup(s => s.GetValues<string>("sort"))
+                .Returns(new[] { sourceValue });
 
             var model = _builder.BuildModel(_valueProvider);
 
-            model.Order.ShouldBe(Sort.PriceAsc);
+            model.Order.ShouldBe(destValue);
         }
 
 
         [Test]
-        public void SearchModelBuilder_WhenSortNotAvailable_ShouldSetSortToRelevanceOrder()
+        public void SearchModelBuilder_WhenSortNotAvailable_GivenASearchTerm_ShouldSetSortToRelevanceOrder()
         {
+            _datasource.Setup(s => s.GetValues<string>("q"))
+                .Returns(new [] {"my custom search"});
             _datasource.Setup(s => s.GetValues<Sort>("sort"))
                 .Returns(new Sort[0]);
 
             var model = _builder.BuildModel(_valueProvider);
 
             model.Order.ShouldBe(Sort.Relevance);
+        }
+
+        [Test]
+        public void SearchModelBuilder_WhenSortNotAvailableAndNoSearchProvided_ShouldSetSortToRandomOrder()
+        {
+            _datasource.Setup(s => s.GetValues<string>("q"))
+                .Returns(new string[0]);
+            _datasource.Setup(s => s.GetValues<string>("sort"))
+                .Returns(new string[0]);
+
+            var model = _builder.BuildModel(_valueProvider);
+
+            model.Order.ShouldBe(Sort.RandomOrder);
+        }
+
+        [Test]
+        public void SearchModelBuilder_WhenSortNotAvailableAndNoSearchProvidedButDepartmentProvided_ShouldSetSortToRandomOrderWithListingPriority()
+        {
+            _datasource.Setup(s => s.GetValues<string>("q"))
+                .Returns(new string[0]);
+            _datasource.Setup(s => s.GetValues<string>("sort"))
+                .Returns(new string[0]);
+            _datasource.Setup(s => s.GetValues<string>("department"))
+                .Returns(new[] {"somedepartment"});
+
+            var model = _builder.BuildModel(_valueProvider);
+
+            model.Order.ShouldBe(Sort.PriorityThenRandom);
         }
 
         [Test]

@@ -39,6 +39,7 @@ namespace Shopomo.ProductSearcher.Domain
 
     public enum Sort
     {
-        Relevance = 0, PriceAsc, PriceDesc
+        Relevance = 0, PriceAsc, PriceDesc,
+        RandomOrder, PriorityThenRandom
     }
 }

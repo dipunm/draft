@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Shopomo.ProductSearcher;
-using Shopomo.Web.Models;
+﻿using System.Web.Http;
+using Shopomo.ProductSearcher.Domain;
 
 namespace Shopomo.Web.Controllers.Api
 {

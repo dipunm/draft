@@ -37,6 +37,7 @@ namespace Infrastructure.Solr
         {
             return enumerable.Concat(new[] { item });
         }
+
     }
 
     public class Product
@@ -78,20 +79,20 @@ namespace Infrastructure.Solr
 
         private ICollection<SortOrder> CalculateOrder(SearchModel query)
         {
-            var userSorts = query.Order.ToSortOrders();
-            if (userSorts.Any())
-                return userSorts.ToArray();
-
-            if (string.IsNullOrEmpty(query.Query))
+            switch (query.Order)
             {
-                var sorts = new List<SortOrder>();
-                if (!string.IsNullOrEmpty(query.Filters.Department))
-                    sorts.Add(new SortOrder("listingpriority", Order.DESC));
-
-                sorts.Add(new SortOrder("randomorder"));
-                return sorts;
+                case Sort.PriorityThenRandom:
+                    return new[] {new SortOrder("prioritylisting", Order.DESC), new SortOrder("randomorder")};
+                case Sort.RandomOrder:
+                    return new[] {new SortOrder("randomorder")};
+                case Sort.PriceAsc:
+                    return new[] { new SortOrder("price", Order.ASC) };
+                case Sort.PriceDesc:
+                    return new[] { new SortOrder("price", Order.DESC) };
+                case Sort.Relevance:
+                default:
+                    return new SortOrder[0];
             }
-            return new SortOrder[0];
         }
 
         public interface ISolrFilterBuilder
