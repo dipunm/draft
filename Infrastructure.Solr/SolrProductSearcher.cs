@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.ServiceLocation;
 using Shopomo.ProductSearcher.Domain;
 using Shopomo.ProductSearcher.Domain.Projections;
+using Shopomo.ProductSearcher.Domain.SearchMetas;
 using SolrNet;
 using SolrNet.Commands.Parameters;
 
@@ -47,29 +48,59 @@ namespace Infrastructure.Solr
 
     public class SolrProductSearcher : IProductSearcher
     {
-        private readonly ISolrFilterBuilder _solrFilterBuilder;
         private readonly ISolrReadOnlyOperations<Product> _solrClient;
-        public SolrProductSearcher(ISolrFilterBuilder solrFilterBuilder)
+        public SolrProductSearcher()
         {
-            _solrFilterBuilder = solrFilterBuilder;
             _solrClient = ServiceLocator.Current.GetInstance<ISolrReadOnlyOperations<Product>>();
         }
 
         public Task<ISearchResult<ProductSummary>> SearchAsync(SearchModel query, IEnumerable<ISearchMeta<object>> interests)
         {
             var solrQuery = string.IsNullOrEmpty(query.Query) ? SolrQuery.All : new SolrQuery(query.Query);
-            var searchOptions = new QueryOptions()
+
+
+            var filterQueries = new List<ISolrQuery>();
+            if (!string.IsNullOrEmpty(query.Filters.Department))
+                filterQueries.Add(new SolrQueryByField("departmentpath", query.Filters.Department));
+            if(query.Filters.PriceRange != null)
+                filterQueries.Add(new SolrQueryByRange<decimal?>("price", query.Filters.PriceRange.Min, query.Filters.PriceRange.Max));
+            if(query.Filters.Retailers.Any())
+                filterQueries.Add(new SolrQueryInList("retailer", query.Filters.Retailers));
+            if (query.Filters.Brands.Any())
+                filterQueries.Add(new SolrQueryInList("brand", query.Filters.Brands));
+            if(query.Filters.WithFreeDelivery.HasValue)
+                filterQueries.Add(new SolrQueryByField("freedelivery", query.Filters.WithFreeDelivery.Value.ToString().ToLowerInvariant()));
+            if(query.Filters.Sale != null)
+                filterQueries.Add(new SolrQueryByRange<decimal?>("discountpercentage", query.Filters.Sale, null));
+
+
+            QueryOptions searchOptions = new QueryOptions()
             {
                 Start = query.Page.Start,
                 Rows = query.Page.Size,
                 OrderBy = CalculateOrder(query),
-                //                Fields = new []{"","","","","","","",""},
-                FilterQueries = _solrFilterBuilder.CreateFilterQueries(query.Filters),
-                //                ExtraParams = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("qt", "/get")}
+                FilterQueries = filterQueries
             };
 
-            var metaQueryHandler = new MetaQueryHandler(null, interests);
-            metaQueryHandler.AppendMetaToSearch(searchOptions);
+            foreach (var interest in interests.OfType<Departments>())
+            {
+                searchOptions.Facet.Queries.Add(new SolrFacetFieldQuery("departmentpath") {Limit = interest.Limit});
+            }
+
+            foreach (var interest in interests.OfType<RelatedRetailers>())
+            {
+                searchOptions.Facet.Queries.Add(new SolrFacetFieldQuery("retailer") { Limit = interest.Limit });
+            }
+
+            foreach (var interest in interests.OfType<RelatedBrands>())
+            {
+                searchOptions.Facet.Queries.Add(new SolrFacetFieldQuery("brand") { Limit = interest.Limit });
+            }
+
+            if(interests.OfType<SpellingSuggestion>().Any())
+            {
+                searchOptions.SpellCheck = new SpellCheckingParameters() {Collate = true};
+            }
 
             var solrResult = _solrClient.Query(solrQuery, searchOptions);
 
@@ -92,29 +123,6 @@ namespace Infrastructure.Solr
                 case Sort.Relevance:
                 default:
                     return new SortOrder[0];
-            }
-        }
-
-        public interface ISolrFilterBuilder
-        {
-            ICollection<ISolrQuery> CreateFilterQueries(SearchFilters filters);
-        }
-
-        public class SolrFilterBuilder : ISolrFilterBuilder
-        {
-            public ICollection<ISolrQuery> CreateFilterQueries(SearchFilters filters)
-            {
-                var filterQueries = Enumerable.Empty<ISolrQuery>();
-
-                //delivery
-                //sale
-                //retailer
-                //brand
-                //price
-
-
-                return filterQueries.ToArray();
-
             }
         }
     }
@@ -146,18 +154,5 @@ namespace Infrastructure.Solr
     {
         TOut Read(SolrQueryResults<Product> result);
         void Write(TRequest request, QueryOptions options);
-    }
-
-    public class MetaQueryHandler
-    {
-        public MetaQueryHandler(IEnumerable<object> handlers, IEnumerable<ISearchMeta<object>> interests)
-        {
-
-        }
-
-        public void AppendMetaToSearch(QueryOptions searchOptions)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
