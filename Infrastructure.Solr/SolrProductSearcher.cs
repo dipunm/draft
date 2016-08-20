@@ -15,7 +15,7 @@ namespace Infrastructure.Solr
     {
         public static void InitProductSearcher(Uri solrUrl)
         {
-            Startup.Init<Product>(new UriBuilder(solrUrl) { Path = "/solr/products"}.Uri.AbsoluteUri);
+            Startup.Init<Product>(new UriBuilder(solrUrl) { Path = "/solr/products" }.Uri.AbsoluteUri);
         }
     }
 
@@ -62,29 +62,49 @@ namespace Infrastructure.Solr
             var filterQueries = new List<ISolrQuery>();
             if (!string.IsNullOrEmpty(query.Filters.Department))
                 filterQueries.Add(new SolrQueryByField("departmentpath", query.Filters.Department));
-            if(query.Filters.PriceRange != null)
+            if (query.Filters.PriceRange != null)
                 filterQueries.Add(new SolrQueryByRange<decimal?>("price", query.Filters.PriceRange.Min, query.Filters.PriceRange.Max));
-            if(query.Filters.Retailers.Any())
+            if (query.Filters.Retailers.Any())
                 filterQueries.Add(new SolrQueryInList("retailer", query.Filters.Retailers));
             if (query.Filters.Brands.Any())
                 filterQueries.Add(new SolrQueryInList("brand", query.Filters.Brands));
-            if(query.Filters.WithFreeDelivery.HasValue)
+            if (query.Filters.WithFreeDelivery.HasValue)
                 filterQueries.Add(new SolrQueryByField("freedelivery", query.Filters.WithFreeDelivery.Value.ToString().ToLowerInvariant()));
-            if(query.Filters.Sale != null)
+            if (query.Filters.Sale != null)
                 filterQueries.Add(new SolrQueryByRange<decimal?>("discountpercentage", query.Filters.Sale, null));
 
+            ICollection<SortOrder> sortOrder;
+            switch (query.Order)
+            {
+                case Sort.PriorityThenRandom:
+                    sortOrder = new[] { new SortOrder("prioritylisting", Order.DESC), new SortOrder("randomorder") };
+                    break;
+                case Sort.RandomOrder:
+                    sortOrder = new[] { new SortOrder("randomorder") };
+                    break;
+                case Sort.PriceAsc:
+                    sortOrder = new[] { new SortOrder("price", Order.ASC) };
+                    break;
+                case Sort.PriceDesc:
+                    sortOrder = new[] { new SortOrder("price", Order.DESC) };
+                    break;
+                case Sort.Relevance:
+                default:
+                    sortOrder = new SortOrder[0];
+                    break;
+            }
 
             QueryOptions searchOptions = new QueryOptions()
             {
                 Start = query.Page.Start,
                 Rows = query.Page.Size,
-                OrderBy = CalculateOrder(query),
+                OrderBy = sortOrder,
                 FilterQueries = filterQueries
             };
 
             foreach (var interest in interests.OfType<Departments>())
             {
-                searchOptions.Facet.Queries.Add(new SolrFacetFieldQuery("departmentpath") {Limit = interest.Limit});
+                searchOptions.Facet.Queries.Add(new SolrFacetFieldQuery("departmentpath") { Limit = interest.Limit });
             }
 
             foreach (var interest in interests.OfType<RelatedRetailers>())
@@ -97,33 +117,21 @@ namespace Infrastructure.Solr
                 searchOptions.Facet.Queries.Add(new SolrFacetFieldQuery("brand") { Limit = interest.Limit });
             }
 
-            if(interests.OfType<SpellingSuggestion>().Any())
+            if (interests.OfType<SpellingSuggestion>().Any())
             {
-                searchOptions.SpellCheck = new SpellCheckingParameters() {Collate = true};
+                searchOptions.SpellCheck = new SpellCheckingParameters() { Collate = true };
+            }
+
+            if (interests.OfType<MaxAvailableSale>().Any())
+            {
+                searchOptions.Stats = searchOptions.Stats ?? new StatsParameters();
+                searchOptions.Stats.AddField("discountpercentage");
             }
 
             var solrResult = _solrClient.Query(solrQuery, searchOptions);
 
             ISearchResult<ProductSummary> searchResult = new ProductSearchResult(null, solrResult);
             return Task.FromResult(searchResult);
-        }
-
-        private ICollection<SortOrder> CalculateOrder(SearchModel query)
-        {
-            switch (query.Order)
-            {
-                case Sort.PriorityThenRandom:
-                    return new[] {new SortOrder("prioritylisting", Order.DESC), new SortOrder("randomorder")};
-                case Sort.RandomOrder:
-                    return new[] {new SortOrder("randomorder")};
-                case Sort.PriceAsc:
-                    return new[] { new SortOrder("price", Order.ASC) };
-                case Sort.PriceDesc:
-                    return new[] { new SortOrder("price", Order.DESC) };
-                case Sort.Relevance:
-                default:
-                    return new SortOrder[0];
-            }
         }
     }
 
@@ -142,7 +150,7 @@ namespace Infrastructure.Solr
         public int Total => _solrResult.NumFound;
         public TOut Get<TRequest, TOut>() where TRequest : ISearchMeta<TOut>
         {
-            var handler =  _handlers.OfType<ISearchMetaHandler<TRequest, TOut>>().SingleOrDefault();
+            var handler = _handlers.OfType<ISearchMetaHandler<TRequest, TOut>>().SingleOrDefault();
             if (handler == null)
                 throw new InvalidOperationException($"Could not find handler for SearchMeta '{typeof(TRequest).Name}'");
 

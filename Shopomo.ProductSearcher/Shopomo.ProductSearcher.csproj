@@ -44,6 +44,7 @@
     <Compile Include="Domain\SearchMetas\Departments.cs" />
     <Compile Include="Domain\SearchMetas\FilterOptions.cs" />
     <Compile Include="Domain\Projections\ProductSummary.cs" />
+    <Compile Include="Domain\SearchMetas\MaxAvailableSale.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\SearchMetas\RelatedBrands.cs" />
     <Compile Include="Domain\SearchMetas\RelatedRetailers.cs" />

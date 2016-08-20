@@ -60,7 +60,17 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
                 o => o.SpellCheck.Collate == true)));
         }
 
+        [Test]
+        public async Task ProductSearcher_GivenMaxSaleRequest_ShouldRequestStatsForDiscountPercentageField()
+        {
+            var interests = new ISearchMeta<object>[] { new MaxAvailableSale() };
 
+            await _searcher.SearchAsync(new SearchModel(), interests);
+
+            _solrClient.Verify(c => c.Query(It.IsAny<ISolrQuery>(), It.Is<QueryOptions>(
+                o => o.Stats.FieldsWithFacets.ContainsKey("discountpercentage"))));
+        }
+        
     }
 
 }
