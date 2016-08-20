@@ -122,6 +122,47 @@ namespace Shopomo.ProductSearcher.Tests
             range.Max.ShouldBe(max);
         }
 
-        //saleoption
+        [TestCase("50off")]
+        [TestCase("25off")]
+        [TestCase("10off")]
+        [TestCase("all")]
+        public void SaleOption_CanBeCastFromString(string alias)
+        {
+            SaleOption option = alias;
+
+            option.ShouldBeOfType<SaleOption>();
+            option.ShouldNotBeNull();
+        }
+
+        [TestCase("5off")]
+        [TestCase("70off")]
+        [TestCase("blah")]
+        [TestCase(null)]
+        public void SaleOption_SafelyCastsToNullIfInvalidString(string alias)
+        {
+            SaleOption option = alias;
+
+            option.ShouldBeNull();
+        }
+
+        [TestCase("50off", "50% or more")]
+        [TestCase("25off", "25% or more")]
+        [TestCase("10off", "10% or more")]
+        [TestCase("all", "All on sale")]
+        public void SaleOption_ShouldContainExpectedDisplayText(string alias, string display)
+        {
+            SaleOption option = alias;
+            option.DisplayText.ShouldBe(display);
+        }
+
+        [TestCase("50off", 50)]
+        [TestCase("25off", 25)]
+        [TestCase("10off", 10)]
+        [TestCase("all", 0)]
+        public void SaleOption_ShouldContainExpectedDisplayText(string alias, decimal value)
+        {
+            SaleOption option = alias;
+            ((decimal)option).ShouldBe(value);
+        }
     }
 }

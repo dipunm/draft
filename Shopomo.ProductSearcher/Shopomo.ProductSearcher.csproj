@@ -45,6 +45,11 @@
     <Compile Include="Domain\SearchMetas\FilterOptions.cs" />
     <Compile Include="Domain\Projections\ProductSummary.cs" />
     <Compile Include="Domain\SearchMetas\MaxAvailableSale.cs" />
+    <Compile Include="Domain\Search\PageModel.cs" />
+    <Compile Include="Domain\Search\PriceRange.cs" />
+    <Compile Include="Domain\Search\SaleOption.cs" />
+    <Compile Include="Domain\Search\SearchFilters.cs" />
+    <Compile Include="Domain\Search\Sort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\SearchMetas\RelatedBrands.cs" />
     <Compile Include="Domain\SearchMetas\RelatedRetailers.cs" />
