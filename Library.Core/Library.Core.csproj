@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{66419144-BB8B-477E-8A19-4DDC68347056}</ProjectGuid>
+    <ProjectGuid>{F22F55A3-936B-4F23-9D3C-81CD68DAB561}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Shopomo.ProductSearcher</RootNamespace>
-    <AssemblyName>Shopomo.ProductSearcher</AssemblyName>
+    <RootNamespace>Library.Core</RootNamespace>
+    <AssemblyName>Library.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,16 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\IProductSearcher.cs" />
-    <Compile Include="Domain\SearchMetas\Departments.cs" />
-    <Compile Include="Domain\SearchMetas\FilterOptions.cs" />
-    <Compile Include="Domain\Projections\ProductSummary.cs" />
-    <Compile Include="Domain\SearchMetas\MaxAvailableSale.cs" />
+    <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Domain\SearchMetas\RelatedBrands.cs" />
-    <Compile Include="Domain\SearchMetas\RelatedRetailers.cs" />
-    <Compile Include="Domain\Search\SearchModel.cs" />
-    <Compile Include="Domain\SearchMetas\SpellingSuggestion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -30,6 +30,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Solr", "Infr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Solr.Tests", "Infrastructure.Solr.Tests\Infrastructure.Solr.Tests.csproj", "{226036F6-E639-4A71-A11E-95D98499F185}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopomo.ProductSearcher.Tests", "Shopomo.ProductSearcher.Tests\Shopomo.ProductSearcher.Tests.csproj", "{FCA49570-0487-4C41-AA71-EA9FC2298BBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Core", "Library.Core\Library.Core.csproj", "{F22F55A3-936B-4F23-9D3C-81CD68DAB561}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +76,14 @@ Global
 		{226036F6-E639-4A71-A11E-95D98499F185}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{226036F6-E639-4A71-A11E-95D98499F185}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{226036F6-E639-4A71-A11E-95D98499F185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCA49570-0487-4C41-AA71-EA9FC2298BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA49570-0487-4C41-AA71-EA9FC2298BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCA49570-0487-4C41-AA71-EA9FC2298BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA49570-0487-4C41-AA71-EA9FC2298BBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22F55A3-936B-4F23-9D3C-81CD68DAB561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22F55A3-936B-4F23-9D3C-81CD68DAB561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22F55A3-936B-4F23-9D3C-81CD68DAB561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22F55A3-936B-4F23-9D3C-81CD68DAB561}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,5 +97,7 @@ Global
 		{66419144-BB8B-477E-8A19-4DDC68347056} = {7FCDDABF-94F2-4FC5-AF6A-B95B79450114}
 		{55CAEC7F-0A6E-441D-B89A-A4EFD4CD3BFA} = {B4830000-1BE4-47D0-9568-72C773EB62BE}
 		{226036F6-E639-4A71-A11E-95D98499F185} = {B4830000-1BE4-47D0-9568-72C773EB62BE}
+		{FCA49570-0487-4C41-AA71-EA9FC2298BBD} = {7FCDDABF-94F2-4FC5-AF6A-B95B79450114}
+		{F22F55A3-936B-4F23-9D3C-81CD68DAB561} = {7FCDDABF-94F2-4FC5-AF6A-B95B79450114}
 	EndGlobalSection
 EndGlobal

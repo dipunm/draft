@@ -2,6 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.Search;
 using Shopomo.ProductSearcher.Domain.SearchMetas;
 using SolrNet;
 using SolrNet.Commands.Parameters;
@@ -70,7 +71,5 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
             _solrClient.Verify(c => c.Query(It.IsAny<ISolrQuery>(), It.Is<QueryOptions>(
                 o => o.Stats.FieldsWithFacets.ContainsKey("discountpercentage"))));
         }
-        
     }
-
 }

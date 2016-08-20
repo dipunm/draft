@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using Library.Core;
 using Shopomo.ProductSearcher;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.Search;
 using Shopomo.ProductSearcher.Domain.SearchMetas;
 using Shopomo.Web.Models;
 
@@ -26,8 +28,7 @@ namespace Shopomo.Web.Controllers
 
         private void LimitPaginationOnSearch(SearchModel search)
         {
-            search.Page.Start = 0;
-            search.Page.Size = 10;
+            search.Page.Change(0, 10);
         }
 
         [Route("")]
@@ -42,7 +43,7 @@ namespace Shopomo.Web.Controllers
         public Task<ActionResult> SearchByDepartment(string department, SearchModel search)
         {
             ViewData["Context"] = "Department" + department;
-            if(string.IsNullOrEmpty(search.Filters.Department))
+            if (string.IsNullOrEmpty(search.Filters.Department))
                 search.Filters.Department = department;
 
             return SearchAsync(search);
@@ -52,7 +53,7 @@ namespace Shopomo.Web.Controllers
         public Task<ActionResult> SearchByBrand(string brand, SearchModel search)
         {
             ViewData["Context"] = "Brand" + brand;
-            search.Filters.Brands = new[] { brand };
+            search.Filters.Brands.Reset(new []{ brand });
             return SearchAsync(search);
         }
 

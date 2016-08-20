@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.ServiceLocation;
 using Shopomo.ProductSearcher.Domain;
 using Shopomo.ProductSearcher.Domain.Projections;
+using Shopomo.ProductSearcher.Domain.Search;
 using Shopomo.ProductSearcher.Domain.SearchMetas;
 using SolrNet;
 using SolrNet.Commands.Parameters;

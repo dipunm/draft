@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.Search;
 using SolrNet;
 using SolrNet.Commands.Parameters;
 
@@ -57,10 +58,8 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         [Test]
         public async Task ProductSearcher_GivenPageInfo_ShouldLimitResultsByPage()
         {
-            var search = new SearchModel()
-            {
-                Page = new PageModel { Start = 20, Size = 10 }
-            };
+            var search = new SearchModel();
+            search.Page.Change(20, 10);
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
 
@@ -105,9 +104,9 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         }
     }
 
-  
 
-  
+
+
     public static class TestExtensions
     {
         public static bool HasOne<T>(this ICollection<ISolrQuery> queries, Func<T, bool> predicate) where T : ISolrQuery

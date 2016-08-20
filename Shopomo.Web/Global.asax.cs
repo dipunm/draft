@@ -5,7 +5,7 @@ using System.Web.Routing;
 using System.Web.Http;
 using ReturnNull.ValueProviders.Web.DataSources;
 using ReturnNull.ValueProviders.Web.ModelBinding;
-using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.Search;
 using Shopomo.Web.Models.Binders;
 
 namespace Shopomo.Web

@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Library.Core;
 using Moq;
 using NUnit.Framework;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.Search;
 using SolrNet;
 using SolrNet.Commands.Parameters;
 
@@ -52,7 +54,7 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         {
             var search = new SearchModel()
             {
-                Filters = { PriceRange = { Min = 20, Max = 200 } }
+                Filters = { PriceRange = PriceRange.Range(20, 200) }
             };
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
@@ -87,7 +89,7 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         {
             var search = new SearchModel()
             {
-                Filters = { PriceRange = { Min = null, Max = 200 } }
+                Filters = { PriceRange = PriceRange.Range(null, 200) }
             };
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
@@ -104,7 +106,7 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         {
             var search = new SearchModel()
             {
-                Filters = { PriceRange = { Min = 20, Max = null } }
+                Filters = { PriceRange = PriceRange.Range(20, null) }
             };
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
@@ -122,10 +124,8 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         [Test]
         public async Task ProductSearcher_GivenMultipleBrands_ShouldUseMultipleValueFilter()
         {
-            var search = new SearchModel
-            {
-                Filters = { Brands = new[] { "Nike", "Audio-technica", "B&Q" } }
-            };
+            var search = new SearchModel();
+            search.Filters.Brands.Reset(new[] {"Nike", "Audio-technica", "B&Q"});
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
 
@@ -138,10 +138,8 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         [Test]
         public async Task ProductSearcher_GivenMultipleEmptyListOfBrands_ShouldNotFilterByBrand()
         {
-            var search = new SearchModel
-            {
-                Filters = { Brands = new string[0] }
-            };
+            var search = new SearchModel();
+            search.Filters.Brands.Clear();
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
 
@@ -153,10 +151,8 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         [Test]
         public async Task ProductSearcher_GivenMultipleRetailers_ShouldUseMultipleValueFilter()
         {
-            var search = new SearchModel
-            {
-                Filters = { Retailers = new[] { "Asda Direct", "Amazon", "B&Q" } }
-            };
+            var search = new SearchModel();
+            search.Filters.Retailers.Reset(new[] { "Asda Direct", "Amazon", "B&Q" });
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
 
@@ -169,10 +165,8 @@ namespace Infrastructure.Solr.Tests.SolrProductSearcherTests
         [Test]
         public async Task ProductSearcher_GivenMultipleEmptyListOfRetailers_ShouldNotFilterByBrand()
         {
-            var search = new SearchModel
-            {
-                Filters = { Retailers = new string[0] }
-            };
+            var search = new SearchModel();
+            search.Filters.Retailers.Clear();
 
             await _searcher.SearchAsync(search, new ISearchMeta<object>[0]);
 

@@ -157,6 +157,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\Library.Core\Library.Core.csproj">
+      <Project>{F22F55A3-936B-4F23-9D3C-81CD68DAB561}</Project>
+      <Name>Library.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shopomo.ContentProvider\Shopomo.ContentProvider.csproj">
       <Project>{F6CC6D34-B2A9-4461-8DAF-C87CDC447E4E}</Project>
       <Name>Shopomo.ContentProvider</Name>

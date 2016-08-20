@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using Shopomo.ProductSearcher.Domain;
 using Shopomo.ProductSearcher.Domain.Projections;
+using Shopomo.ProductSearcher.Domain.Search;
 using Shopomo.ProductSearcher.Domain.SearchMetas;
 using Shopomo.Web.Controllers;
 using Shopomo.Web.Models;
@@ -43,8 +44,8 @@ namespace Shopomo.Web.Tests.Controllers
         [Test]
         public async Task Search_GivenSearchModelPageStart_ShouldResetPageStartTo0()
         {
-            var query = new SearchModel()
-            { Page = new PageModel() {Start = 2} };
+            var query = new SearchModel();
+            query.Page.Change(2, 20);
 
             await _controller.SearchAsync(query);
 
@@ -56,8 +57,8 @@ namespace Shopomo.Web.Tests.Controllers
         [Test]
         public async Task Search_GivenSearchModelPageSize_ShouldResetPageSizeTo10()
         {
-            var query = new SearchModel()
-            {Page = new PageModel() {Size = 20} };
+            var query = new SearchModel();
+            query.Page.Change(2, 20);
 
             await _controller.SearchAsync(query);
 

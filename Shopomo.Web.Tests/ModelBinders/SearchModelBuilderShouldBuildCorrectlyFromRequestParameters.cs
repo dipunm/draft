@@ -2,9 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using ReturnNull.ValueProviders;
-using Shopomo.ProductSearcher;
-using Shopomo.ProductSearcher.Domain;
-using Shopomo.Web.Models;
+using Shopomo.ProductSearcher.Domain.Search;
 using Shopomo.Web.Models.Binders;
 using Shouldly;
 
@@ -106,58 +104,14 @@ namespace Shopomo.Web.Tests.ModelBinders
         }
 
         [Test]
-        public void SearchModelBuilder_WhenPageSizeIsGreaterThan100_ShouldLimitPageSizeTo100()
+        public void SearchModelBuilder_ShouldNotChangeDefaultPagesize()
         {
-            _datasource.Setup(s => s.GetValues<int>("pagesize"))
-                .Returns(new[] {101});
+            var defaultModel = new SearchModel();
 
             var model = _builder.BuildModel(_valueProvider);
 
-            model.Page.Size.ShouldBe(100);
-        }
-
-        [Test]
-        public void SearchModelBuilder_ShouldHaveDefaultPageSizeOf9()
-        {
-            _datasource.Setup(s => s.GetValues<int>("pagesize"))
-                .Returns(new int[0]);
-
-            var model = _builder.BuildModel(_valueProvider);
-
-            model.Page.Size.ShouldBe(9);
-        }
-
-        [Test]
-        public void SearchModelBuilder_ShouldHandleNegativePageStartMakingItPositive()
-        {
-            _datasource.Setup(s => s.GetValues<int>("pagestart"))
-                .Returns(new [] {-10});
-
-            var model = _builder.BuildModel(_valueProvider);
-
-            model.Page.Start.ShouldBe(10);
-        }
-
-        [Test]
-        public void SearchModelBuilder_ShouldHandleNegativePageSizeMakingItPositive()
-        {
-            _datasource.Setup(s => s.GetValues<int>("pagesize"))
-                .Returns(new[] { -10 });
-
-            var model = _builder.BuildModel(_valueProvider);
-
-            model.Page.Size.ShouldBe(10);
-        }
-
-        [Test]
-        public void SearchModelBuilder_ShouldGetPagePosition_UsingCorrectKey()
-        {
-            _datasource.Setup(s => s.GetValues<int>("pagestart"))
-                .Returns(new[] { 10 });
-
-            var model = _builder.BuildModel(_valueProvider);
-
-            model.Page.Start.ShouldBe(10);
+            model.Page.Start.ShouldBe(defaultModel.Page.Start);
+            model.Page.Size.ShouldBe(defaultModel.Page.Size);
         }
     }
 }

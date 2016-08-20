@@ -1,49 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Library.Core;
 using ReturnNull.ValueProviders;
 using ReturnNull.ValueProviders.Web.ModelBinding;
 using Shopomo.ProductSearcher;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.Search;
 
 namespace Shopomo.Web.Models.Binders
 {
     public class SearchModelBuilder : IModelBuilder<SearchModel>
-    {
-        private const int MaxPageSize = 100;
-
+    { 
         public SearchModel BuildModel(IValueProvider dataProvider)
         {
             dataProvider = dataProvider.LimitedTo("querystring");
 
-            var query = dataProvider.GetValue<string>("q");
-            var filters = new SearchFilters()
-            {
-                Brands = dataProvider.GetValues<string>("brands"),
-                Department = dataProvider.GetValue<string>("department"),
-                Retailers = dataProvider.GetValues<string>("retailer"),
-                WithFreeDelivery = dataProvider.GetValue<bool?>("freedelivery"),
-                OnSale = dataProvider.GetValue<bool?>("onsale"),
-                PriceRange = new PriceRange()
-                {
-                    Max = dataProvider.GetValue<decimal?>("maxprice"),
-                    Min = dataProvider.GetValue<decimal?>("minprice")
-                }
-            };
-            return new SearchModel()
-            {
-                Query = query,
-                Filters = filters,
-                Page = new PageModel()
-                {
-                    Size = Math.Min(Math.Abs(dataProvider.GetValue("pagesize", defaultValue: 9)), MaxPageSize),
-                    Start = Math.Abs(dataProvider.GetValue("pagestart", defaultValue: 0))
-                },
-                Order = CalculateSort(dataProvider.GetValue<string>("sort"), query, filters)
-            };
+            var model = new SearchModel();
+            model.Query = dataProvider.GetValue<string>("q");
+            model.Filters.Department = dataProvider.GetValue<string>("department");
+            model.Filters.WithFreeDelivery = dataProvider.GetValue<bool?>("freedelivery");
+            model.Filters.Sale = dataProvider.GetValue<string>("sale");
+            model.Filters.PriceRange = PriceRange.Range(
+                dataProvider.GetValue<decimal?>("maxprice"),
+                dataProvider.GetValue<decimal?>("minprice")
+            );
+            model.Filters.Brands.Reset(dataProvider.GetValues<string>("brands"));
+            model.Filters.Retailers.Reset(dataProvider.GetValues<string>("retailer"));
+            model.Order = CalculateSort(
+                dataProvider.GetValue<string>("sort"), 
+                !string.IsNullOrEmpty(model.Query),
+                !string.IsNullOrEmpty(model.Filters.Department));
+
+            return model;
         }
 
-        private Sort CalculateSort(string sort, string query, SearchFilters filters)
+        private Sort CalculateSort(string sort, bool hasQuery, bool hasDepartmentFilter)
         {
             switch (sort)
             {
@@ -52,15 +44,14 @@ namespace Shopomo.Web.Models.Binders
                 case "pricedesc":
                     return Sort.PriceDesc;
                 default:
-                    if (string.IsNullOrEmpty(query))
+                    if (!hasQuery)
                     {
-                        return string.IsNullOrEmpty(filters.Department) ? Sort.RandomOrder : Sort.PriorityThenRandom;
+                        return hasDepartmentFilter ? Sort.PriorityThenRandom : Sort.RandomOrder;
                     }
                     else
                     {
                         return Sort.Relevance;
                     }
-
             }
         }
     }
