@@ -2,16 +2,17 @@ namespace Shopomo.ProductSearcher.Domain.Search
 {
     public class SaleOption
     {
+        private readonly decimal _value;
+
         private SaleOption(int value, string displayText)
         {
             _value = value;
             DisplayText = displayText;
         }
 
-        private readonly decimal _value;
         public string DisplayText { get; }
 
-        public static implicit operator decimal? (SaleOption opt)
+        public static implicit operator decimal?(SaleOption opt)
         {
             return opt?._value;
         }

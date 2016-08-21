@@ -5,7 +5,8 @@ using System.Web.Http;
 namespace Shopomo.Web.Controllers.Api
 {
     public class FilterController : ApiController
-    {/*
+    {
+/*
         private readonly IProductSearcher _productSearcher;
         private readonly IDepartmentSearcher _departmentSearcher;
 
@@ -53,12 +54,11 @@ namespace Shopomo.Web.Controllers.Api
         public static IEnumerable<object> Nest(this IEnumerable<object> departments)
         {
             throw new NotImplementedException();
-        } 
+        }
 
         public static IEnumerable<object> SimplifyForListing(this IEnumerable<object> products)
         {
             throw new NotImplementedException();
         }
     }
-
 }

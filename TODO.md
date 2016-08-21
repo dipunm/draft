@@ -15,3 +15,9 @@ landing-page-via-wp
 Put contextualised search building into searchmodelbuilder?
 Limit pagination via attribute/action filter? (see security part in webapi book)
 
+
+
+
+//TODO: Change SearchModel to be idempotent?
+//TODO: Refactor ProductSearcher
+//TODO: Write Tests about interpreting solrnet responses

@@ -8,7 +8,7 @@ namespace Shopomo.Web.Controllers
         [Route("searchbar")]
         public ActionResult Searchbar()
         {
-            var model = new object();//_commonService.DepartmentsMenu();
+            var model = new object(); //_commonService.DepartmentsMenu();
             return PartialView(model);
         }
 

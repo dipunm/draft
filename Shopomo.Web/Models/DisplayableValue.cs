@@ -6,7 +6,9 @@ namespace Shopomo.Web.Models
         public string DisplayName { get; }
 
         public DisplayableValue(object value) : this(value, value.ToString())
-        { }
+        {
+        }
+
         public DisplayableValue(object value, string displayName)
         {
             Value = value;

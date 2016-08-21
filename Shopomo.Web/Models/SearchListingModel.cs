@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Shopomo.ProductSearcher;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.AdditionalData;
 using Shopomo.ProductSearcher.Domain.Projections;
-using Shopomo.ProductSearcher.Domain.SearchMetas;
 
 namespace Shopomo.Web.Models
 {

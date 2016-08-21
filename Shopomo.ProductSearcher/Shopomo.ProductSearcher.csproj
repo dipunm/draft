@@ -41,20 +41,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\IProductSearcher.cs" />
-    <Compile Include="Domain\SearchMetas\Departments.cs" />
-    <Compile Include="Domain\SearchMetas\FilterOptions.cs" />
+    <Compile Include="Domain\AdditionalData\IAdditionalData.cs" />
+    <Compile Include="Domain\ISearchResult.cs" />
+    <Compile Include="Domain\AdditionalData\Departments.cs" />
+    <Compile Include="Domain\AdditionalData\FilterOptions.cs" />
     <Compile Include="Domain\Projections\ProductSummary.cs" />
-    <Compile Include="Domain\SearchMetas\MaxAvailableSale.cs" />
+    <Compile Include="Domain\AdditionalData\MaxAvailableSale.cs" />
     <Compile Include="Domain\Search\PageModel.cs" />
     <Compile Include="Domain\Search\PriceRange.cs" />
     <Compile Include="Domain\Search\SaleOption.cs" />
     <Compile Include="Domain\Search\SearchFilters.cs" />
     <Compile Include="Domain\Search\Sort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Domain\SearchMetas\RelatedBrands.cs" />
-    <Compile Include="Domain\SearchMetas\RelatedRetailers.cs" />
+    <Compile Include="Domain\AdditionalData\RelatedBrands.cs" />
+    <Compile Include="Domain\AdditionalData\RelatedRetailers.cs" />
     <Compile Include="Domain\Search\SearchModel.cs" />
-    <Compile Include="Domain\SearchMetas\SpellingSuggestion.cs" />
+    <Compile Include="Domain\AdditionalData\SpellingSuggestion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

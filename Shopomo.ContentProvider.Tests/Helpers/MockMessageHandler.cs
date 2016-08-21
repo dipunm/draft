@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Shopomo.ContentProvider.Tests
+namespace Shopomo.ContentProvider.Tests.Helpers
 {
     internal class MockMessageHandler : HttpMessageHandler
     {
-        private List<HttpRequestMessage> _actionsList;
         private readonly HttpResponseMessage _response;
+        private List<HttpRequestMessage> _actionsList;
 
         public MockMessageHandler(HttpResponseMessage response)
         {
@@ -22,7 +21,8 @@ namespace Shopomo.ContentProvider.Tests
             _actionsList = actionsList;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
             if (_actionsList == null)
                 throw new InvalidOperationException("Call SetActionList first.");

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 
-namespace Shopomo.ContentProvider.Tests
+namespace Shopomo.ContentProvider.Tests.Helpers
 {
     internal class MockHttpClient : HttpClient
     {

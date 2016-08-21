@@ -20,12 +20,36 @@ namespace Shopomo.Web.Tests.ModelBinders
         public void Setup()
         {
             _datasource = new Mock<IValueSource>();
-            _datasources = new Dictionary<string, IValueSource>()
+            _datasources = new Dictionary<string, IValueSource>
             {
-                { "querystring", _datasource.Object },
+                {"querystring", _datasource.Object}
             };
             _valueProvider = new ValueProvider(_datasources);
             _builder = new SearchModelBuilder();
+        }
+
+        [TestCase("priceasc", Sort.PriceAsc)]
+        [TestCase("pricedesc", Sort.PriceDesc)]
+        public void SearchModelBuilder_WhenSortProvided_ShouldSetModelOrderToProvidedValue(string sourceValue,
+            Sort destValue)
+        {
+            _datasource.Setup(s => s.GetValues<string>("sort"))
+                .Returns(new[] {sourceValue});
+
+            var model = _builder.BuildModel(_valueProvider);
+
+            model.Order.ShouldBe(destValue);
+        }
+
+        [Test]
+        public void SearchModelBuilder_ShouldNotChangeDefaultPagesize()
+        {
+            var defaultModel = new SearchModel();
+
+            var model = _builder.BuildModel(_valueProvider);
+
+            model.Page.Start.ShouldBe(defaultModel.Page.Start);
+            model.Page.Size.ShouldBe(defaultModel.Page.Size);
         }
 
         [Test]
@@ -33,7 +57,7 @@ namespace Shopomo.Web.Tests.ModelBinders
         {
             var datasource2 = new Mock<IValueSource>();
             _datasources.Add("notquerystring", datasource2.Object);
-            
+
             _builder.BuildModel(_valueProvider);
 
             datasource2.Verify(p => p.GetValues<string>(It.IsAny<string>()), Times.Never);
@@ -49,24 +73,12 @@ namespace Shopomo.Web.Tests.ModelBinders
             datasource2.Verify(p => p.GetValues<bool?>(It.IsAny<string>()), Times.Never);
         }
 
-        [TestCase("priceasc", Sort.PriceAsc)]
-        [TestCase("pricedesc", Sort.PriceDesc)]
-        public void SearchModelBuilder_WhenSortProvided_ShouldSetModelOrderToProvidedValue(string sourceValue, Sort destValue)
-        {
-            _datasource.Setup(s => s.GetValues<string>("sort"))
-                .Returns(new[] { sourceValue });
-
-            var model = _builder.BuildModel(_valueProvider);
-
-            model.Order.ShouldBe(destValue);
-        }
-
 
         [Test]
         public void SearchModelBuilder_WhenSortNotAvailable_GivenASearchTerm_ShouldSetSortToRelevanceOrder()
         {
             _datasource.Setup(s => s.GetValues<string>("q"))
-                .Returns(new [] {"my custom search"});
+                .Returns(new[] {"my custom search"});
             _datasource.Setup(s => s.GetValues<Sort>("sort"))
                 .Returns(new Sort[0]);
 
@@ -89,7 +101,9 @@ namespace Shopomo.Web.Tests.ModelBinders
         }
 
         [Test]
-        public void SearchModelBuilder_WhenSortNotAvailableAndNoSearchProvidedButDepartmentProvided_ShouldSetSortToRandomOrderWithListingPriority()
+        public void
+            SearchModelBuilder_WhenSortNotAvailableAndNoSearchProvidedButDepartmentProvided_ShouldSetSortToRandomOrderWithListingPriority
+            ()
         {
             _datasource.Setup(s => s.GetValues<string>("q"))
                 .Returns(new string[0]);
@@ -101,17 +115,6 @@ namespace Shopomo.Web.Tests.ModelBinders
             var model = _builder.BuildModel(_valueProvider);
 
             model.Order.ShouldBe(Sort.PriorityThenRandom);
-        }
-
-        [Test]
-        public void SearchModelBuilder_ShouldNotChangeDefaultPagesize()
-        {
-            var defaultModel = new SearchModel();
-
-            var model = _builder.BuildModel(_valueProvider);
-
-            model.Page.Start.ShouldBe(defaultModel.Page.Start);
-            model.Page.Size.ShouldBe(defaultModel.Page.Size);
         }
     }
 }

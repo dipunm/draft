@@ -48,7 +48,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SolrProductSearcher.cs" />
+    <Compile Include="ProductSearcher\Config\AdditionalDataConfig.cs" />
+    <Compile Include="ProductSearcher\Config\FilterConfig.cs" />
+    <Compile Include="ProductSearcher\Config\SolrFields.cs" />
+    <Compile Include="ProductSearcher\Config\SortConfig.cs" />
+    <Compile Include="ProductSearcher\Client\ProductSearchResult.cs" />
+    <Compile Include="ProductSearcher\Client\SolrQueryBuilder.cs" />
+    <Compile Include="ProductSearcher\AdditionalDataAdapters\FilterOptionsAdapter.cs" />
+    <Compile Include="ProductSearcher\AdditionalDataAdapters\MaxFieldAdapter.cs" />
+    <Compile Include="ProductSearcher\Client\DocumentModel.cs" />
+    <Compile Include="ProductSearcher\AdditionalDataAdapters\ISolrAdditionalDataProvider.cs" />
+    <Compile Include="ProductSearcher\AdditionalDataAdapters\SpellingSuggestionAdapter.cs" />
+    <Compile Include="SolrBootstrapper.cs" />
+    <Compile Include="ProductSearcher\Client\SolrProductSearcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +73,7 @@
       <Name>Shopomo.ProductSearcher</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

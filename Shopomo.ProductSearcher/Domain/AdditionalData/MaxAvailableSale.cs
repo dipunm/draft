@@ -1,8 +1,7 @@
-﻿namespace Shopomo.ProductSearcher.Domain.SearchMetas
+﻿namespace Shopomo.ProductSearcher.Domain.AdditionalData
 {
-    public class MaxAvailableSale : ISearchMeta<SalePercentage>
+    public class MaxAvailableSale : IAdditionalData<SalePercentage>
     {
-        
     }
 
     public class SalePercentage
@@ -11,6 +10,8 @@
         {
             Amount = amt;
         }
+
+        public decimal Amount { get; }
 
         public static implicit operator decimal(SalePercentage amt)
         {
@@ -21,7 +22,5 @@
         {
             return new SalePercentage(amt);
         }
-
-        public decimal Amount { get; }
     }
 }

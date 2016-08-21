@@ -1,4 +1,4 @@
-﻿namespace Shopomo.ProductSearcher.Domain.SearchMetas
+﻿namespace Shopomo.ProductSearcher.Domain.AdditionalData
 {
     public abstract class FilterOptions
     {

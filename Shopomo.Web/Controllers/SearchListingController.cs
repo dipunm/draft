@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using Library.Core;
-using Shopomo.ProductSearcher;
 using Shopomo.ProductSearcher.Domain;
+using Shopomo.ProductSearcher.Domain.AdditionalData;
 using Shopomo.ProductSearcher.Domain.Search;
-using Shopomo.ProductSearcher.Domain.SearchMetas;
 using Shopomo.Web.Models;
 
 namespace Shopomo.Web.Controllers
@@ -19,7 +18,7 @@ namespace Shopomo.Web.Controllers
             _productSearcher = productSearcher;
         }
 
-        private ISearchMeta<object>[] PageInterests { get; } = {
+        private IAdditionalData<object>[] PageInterests { get; } = {
             new RelatedBrands(5),
             new Departments(10),
             new RelatedRetailers(5),
@@ -53,11 +52,8 @@ namespace Shopomo.Web.Controllers
         public Task<ActionResult> SearchByBrand(string brand, SearchModel search)
         {
             ViewData["Context"] = "Brand" + brand;
-            search.Filters.Brands.Reset(new []{ brand });
+            search.Filters.Brands.Reset(new[] {brand});
             return SearchAsync(search);
         }
-
     }
-
-
 }

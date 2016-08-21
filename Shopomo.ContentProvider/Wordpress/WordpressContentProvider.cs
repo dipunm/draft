@@ -11,7 +11,8 @@ namespace Shopomo.ContentProvider.Wordpress
         private readonly IResponseReader _responseReader;
         private readonly WordpressSettings _settings;
 
-        public WordpressContentProvider(HttpClient httpClient, IResponseReader responseReader, WordpressSettings settings)
+        public WordpressContentProvider(HttpClient httpClient, IResponseReader responseReader,
+            WordpressSettings settings)
         {
             _httpClient = httpClient;
             _responseReader = responseReader;
@@ -20,14 +21,15 @@ namespace Shopomo.ContentProvider.Wordpress
 
         public async Task<IContent> GetPageAsync(string pageName)
         {
-            if(!_settings.Pages.ContainsKey(pageName))
-                throw new ArgumentException($"unknown page: '{pageName}'. Check that all expected pages have been configured in the {nameof(WordpressSettings)}", nameof(pageName));
+            if (!_settings.Pages.ContainsKey(pageName))
+                throw new ArgumentException(
+                    $"unknown page: '{pageName}'. Check that all expected pages have been configured in the {nameof(WordpressSettings)}",
+                    nameof(pageName));
 
             var id = _settings.Pages[pageName];
             var requestUrl = new UriBuilder(_settings.WordpressUrl)
             {
-                Query = $"json=get_page&id={id}",
-
+                Query = $"json=get_page&id={id}"
             }.Uri;
             var response = await _httpClient.GetAsync(requestUrl).ConfigureAwait(false);
 

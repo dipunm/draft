@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using Shopomo.ContentProvider.Tests.Helpers;
 using Shopomo.ContentProvider.Wordpress;
 using Shopomo.ContentProvider.Wordpress.Models;
 using Shouldly;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -8,7 +7,7 @@ namespace Shopomo.Web.Controllers.Api
     public class AutocompleteController : ApiController
     {
         private readonly ITermSearcher _termSearcher;
-        
+
         public AutocompleteController(ITermSearcher termSearcher)
         {
             _termSearcher = termSearcher;

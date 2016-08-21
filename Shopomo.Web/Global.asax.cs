@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Http;
 using ReturnNull.ValueProviders.Web.DataSources;
 using ReturnNull.ValueProviders.Web.ModelBinding;
 using Shopomo.ProductSearcher.Domain.Search;
@@ -12,7 +12,7 @@ namespace Shopomo.Web
 {
     public class Global : HttpApplication
     {
-        void Application_Start(object sender, EventArgs e)
+        private void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
@@ -23,7 +23,8 @@ namespace Shopomo.Web
             DataSourceConfig.DataSources.Add("querystring", new QuerystringProvider());
 
             // Set up ModelBuilders for Search
-            ModelBinders.Binders.Add(typeof(SearchModel), new ModelBinder<SearchModelBuilder, SearchModel>(new SearchModelBuilder()));
+            ModelBinders.Binders.Add(typeof (SearchModel),
+                new ModelBinder<SearchModelBuilder, SearchModel>(new SearchModelBuilder()));
         }
     }
 }

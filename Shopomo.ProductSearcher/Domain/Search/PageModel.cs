@@ -11,7 +11,8 @@ namespace Shopomo.ProductSearcher.Domain.Search
             Start = 0;
             Size = 10;
         }
-        public int Start { get; set;  }
+
+        public int Start { get; set; }
         public int Size { get; set; }
 
         public void Change(int start, int size)

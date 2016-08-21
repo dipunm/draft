@@ -26,6 +26,11 @@ namespace Shopomo.Web.Tests.Controllers
             _controller = new CuratedPageController(_contentProvider.Object, _knownPages);
         }
 
+        //TODO:???
+        public void Controller_WhenContentProviderReturnsNoContent_ShouldLogError()
+        {
+        }
+
         [Test]
         public async Task Controller_GivenAnUnknownPageName_ShouldRespondNotFound()
         {
@@ -51,6 +56,18 @@ namespace Shopomo.Web.Tests.Controllers
         }
 
         [Test]
+        public async Task Controller_WhenContentProviderReturnsNoContent_ShouldRespondServerError()
+        {
+            _knownPages.Add("known1");
+            _contentProvider.Setup(p => p.GetPageAsync("known1")).ReturnsAsync(null);
+
+            var result = await _controller.Desktop("known1");
+
+            result.ShouldBeOfType<HttpStatusCodeResult>();
+            (result as HttpStatusCodeResult).StatusCode.ShouldBe((int) HttpStatusCode.InternalServerError);
+        }
+
+        [Test]
         public async Task Controller_WhenLoadingMobilePage_ShouldUseMobilePage()
         {
             _knownPages.Add("known1");
@@ -63,24 +80,5 @@ namespace Shopomo.Web.Tests.Controllers
             result.ShouldBeOfType<ViewResult>();
             (result as ViewResult).ViewName.ShouldBe("mobile");
         }
-
-        [Test]
-        public async Task Controller_WhenContentProviderReturnsNoContent_ShouldRespondServerError()
-        {
-            _knownPages.Add("known1");
-            _contentProvider.Setup(p => p.GetPageAsync("known1")).ReturnsAsync(null);
-            
-            var result = await _controller.Desktop("known1");
-
-            result.ShouldBeOfType<HttpStatusCodeResult>();
-            (result as HttpStatusCodeResult).StatusCode.ShouldBe((int)HttpStatusCode.InternalServerError);
-        }
-
-        //TODO:???
-        public void Controller_WhenContentProviderReturnsNoContent_ShouldLogError()
-        {
-
-        }
-        
     }
 }

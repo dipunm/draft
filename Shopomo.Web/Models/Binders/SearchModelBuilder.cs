@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Library.Core;
 using ReturnNull.ValueProviders;
 using ReturnNull.ValueProviders.Web.ModelBinding;
-using Shopomo.ProductSearcher;
-using Shopomo.ProductSearcher.Domain;
 using Shopomo.ProductSearcher.Domain.Search;
 
 namespace Shopomo.Web.Models.Binders
 {
     public class SearchModelBuilder : IModelBuilder<SearchModel>
-    { 
+    {
         public SearchModel BuildModel(IValueProvider dataProvider)
         {
             dataProvider = dataProvider.LimitedTo("querystring");
@@ -24,11 +19,11 @@ namespace Shopomo.Web.Models.Binders
             model.Filters.PriceRange = PriceRange.Range(
                 dataProvider.GetValue<decimal?>("maxprice"),
                 dataProvider.GetValue<decimal?>("minprice")
-            );
+                );
             model.Filters.Brands.Reset(dataProvider.GetValues<string>("brands"));
             model.Filters.Retailers.Reset(dataProvider.GetValues<string>("retailer"));
             model.Order = CalculateSort(
-                dataProvider.GetValue<string>("sort"), 
+                dataProvider.GetValue<string>("sort"),
                 !string.IsNullOrEmpty(model.Query),
                 !string.IsNullOrEmpty(model.Filters.Department));
 
@@ -48,10 +43,7 @@ namespace Shopomo.Web.Models.Binders
                     {
                         return hasDepartmentFilter ? Sort.PriorityThenRandom : Sort.RandomOrder;
                     }
-                    else
-                    {
-                        return Sort.Relevance;
-                    }
+                    return Sort.Relevance;
             }
         }
     }

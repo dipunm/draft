@@ -26,9 +26,11 @@ namespace Shopomo.Web.Controllers
         public CuratedPageController()
         {
             _contentProvider = new DummyProvider();
-            _supportedPages = new List<string>()
+            _supportedPages = new List<string>
             {
-                "pagea", "pageb", "AboutUs"
+                "pagea",
+                "pageb",
+                "AboutUs"
             };
         }
 
@@ -47,7 +49,8 @@ namespace Shopomo.Web.Controllers
             if (page == null)
             {
                 //TODO: logging?
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Content provider was unable to provide content.");
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError,
+                    "Content provider was unable to provide content.");
             }
             return View(viewName, page);
         }

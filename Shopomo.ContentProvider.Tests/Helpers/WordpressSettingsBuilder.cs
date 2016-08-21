@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Security.Policy;
 using Shopomo.ContentProvider.Wordpress;
 
-namespace Shopomo.ContentProvider.Tests
+namespace Shopomo.ContentProvider.Tests.Helpers
 {
     internal static class WordpressSettingsBuilder
     {
         private static readonly Uri Url = new Uri("http://fail-fast.com/");
+
         public static WordpressSettings BuildValidSettings()
         {
             return new WordpressSettings(Url);
@@ -16,7 +16,7 @@ namespace Shopomo.ContentProvider.Tests
         {
             return new WordpressSettings(Url)
             {
-                Pages = { { page, id } }
+                Pages = {{page, id}}
             };
         }
 
@@ -24,7 +24,7 @@ namespace Shopomo.ContentProvider.Tests
         {
             return new WordpressSettings(url)
             {
-                Pages = { { page, id } }
+                Pages = {{page, id}}
             };
         }
     }

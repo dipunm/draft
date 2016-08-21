@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace Shopomo.ProductSearcher.Domain.Search
+﻿namespace Shopomo.ProductSearcher.Domain.Search
 {
     public class SearchModel
     {
@@ -9,6 +7,7 @@ namespace Shopomo.ProductSearcher.Domain.Search
             Filters = new SearchFilters();
             Page = new PageModel();
         }
+
         public string Query { get; set; }
         public SearchFilters Filters { get; }
         public Sort Order { get; set; }
