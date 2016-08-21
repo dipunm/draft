@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SolrProductSearcherTests\SolrProductSearchResults.cs" />
     <Compile Include="SolrProductSearcherTests\SolrProductSearcherCanApplyFiltersToTheSearch.cs" />
     <Compile Include="SolrProductSearcherTests\SolrProductSearcherCanProvideBasicSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,11 +8,11 @@ using SolrNet;
 
 namespace Infrastructure.Solr.ProductSearcher.Client
 {
-    public class ProductSearchResult : ISearchResult<ProductSummary>
+    public class SolrProductSearchResult : ISearchResult<ProductSummary>
     {
         private readonly SolrQueryResults<DocumentModel> _solrResult;
 
-        public ProductSearchResult(IEnumerable<object> handlers, SolrQueryResults<DocumentModel> solrResult)
+        public SolrProductSearchResult(IEnumerable<object> handlers, SolrQueryResults<DocumentModel> solrResult)
         {
             _solrResult = solrResult;
         }

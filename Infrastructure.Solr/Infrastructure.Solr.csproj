@@ -52,7 +52,7 @@
     <Compile Include="ProductSearcher\Config\FilterConfig.cs" />
     <Compile Include="ProductSearcher\Config\SolrFields.cs" />
     <Compile Include="ProductSearcher\Config\SortConfig.cs" />
-    <Compile Include="ProductSearcher\Client\ProductSearchResult.cs" />
+    <Compile Include="ProductSearcher\Client\SolrProductSearchResult.cs" />
     <Compile Include="ProductSearcher\Client\SolrQueryBuilder.cs" />
     <Compile Include="ProductSearcher\AdditionalDataAdapters\FilterOptionsAdapter.cs" />
     <Compile Include="ProductSearcher\AdditionalDataAdapters\MaxFieldAdapter.cs" />

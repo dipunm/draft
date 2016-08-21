@@ -28,7 +28,7 @@ namespace Infrastructure.Solr.ProductSearcher.Client
 
             var solrResult = _solrClient.Query(solrQuery, solrOptions);
 
-            var searchResult = new ProductSearchResult(null, solrResult);
+            var searchResult = new SolrProductSearchResult(null, solrResult);
             return Task.FromResult<ISearchResult<ProductSummary>>(searchResult);
         }
     }
